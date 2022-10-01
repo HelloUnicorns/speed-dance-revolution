@@ -1,11 +1,8 @@
-import { Application, Sprite } from 'pixi.js';
+import { Application } from 'pixi.js';
+import { ArrowsContainer } from './containers/arrows';
 
 const app = new Application({ width: 800, height: 600 });
 
-const arrows = Sprite.from('images/arrows.png');
-arrows.anchor.set(0.5, 0);
-arrows.position.set(app.view.width / 2, 20);
-
-app.stage.addChild(arrows);
+app.stage.addChild(new ArrowsContainer(app.view.width, app.view.height).container);
 
 export default app;
