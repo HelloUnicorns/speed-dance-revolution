@@ -13,7 +13,6 @@ function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: nu
 }
 
 export class MainScene {
-  
   width: number;
   height: number;
   spawnTimer: number;
@@ -23,10 +22,8 @@ export class MainScene {
 
   // Graphics
   container: Container;
-  scoreLabel: Text;
 
   constructor(width: number, height: number) {
-    
     this.width = width;
     this.height = height;
     this.spawnTimer = 0;
@@ -35,17 +32,19 @@ export class MainScene {
     this.score = 0;
 
     // Graphics
-    this.scoreLabel = new Text('Score: 0', {
+    this.container = new Container();
+
+    const scoreLabel = new Text('Score: 0', {
       fontFamily : 'Arial',
       fontSize: 32,
       fill : 0x00FF88,
       align : 'center',
     });
-    this.scoreLabel.anchor.set(0.5, 1);
-    this.scoreLabel.position.set(this.width / 2, this.height);
+    scoreLabel.anchor.set(0.5, 1);
+    scoreLabel.position.set(this.width / 2, this.height);
+    scoreLabel.name = 'score';
+    this.container.addChild(scoreLabel);
 
-    this.container = new Container();
-    
     for (const direction of DIRECTIONS) {
       // Target arrow sprite
       const arrow = ArrowSprite.realFrom('images/arrow.png', direction);
@@ -80,13 +79,14 @@ export class MainScene {
 
   hit() {
     console.log('hit');
-    this.score += HIT_SCORE * this.speed * 1000;
-    this.scoreLabel.text = "Score: " + Math.round(this.score).toString();
+    this.score += HIT_SCORE * this.speed;
+    const scoreLabel = this.container.getChildByName('score') as Text;
+    scoreLabel.text = "Score: " + Math.round(this.score).toString();
   }
 
-  miss(arrow: ArrowSprite = undefined) {
+  miss(arrow?: ArrowSprite) {
     console.log('miss');
-    if (arrow != undefined) {
+    if (arrow !== undefined) {
       arrow.missed = true;
     }
   }
