@@ -1,20 +1,6 @@
-import { Container, PI_2, Sprite } from 'pixi.js';
+import { Container } from 'pixi.js';
+import { ArrowSprite, Direction, DIRECTIONS, getDirection } from '../sprites/arrow';
 import { keyboard } from '../utils/keyboard';
-
-interface Direction {
-  order: number;
-  name: string;
-  rotation: number;
-  color: number;
-  key: string;
-}
-
-const DIRECTIONS: Direction[] = [
-  { order: 0, name: 'left', rotation: 0, color: 0xff3300, key: 'ArrowLeft' },
-  { order: 1, name: 'down', rotation: 0.75 * PI_2, color: 0xffff00, key: 'ArrowDown' },
-  { order: 2, name: 'up', rotation: 0.25 * PI_2, color: 0x00ff00, key: 'ArrowUp' },
-  { order: 3, name: 'right', rotation: 0.5 * PI_2, color: 0x3377ff, key: 'ArrowRight' },
-];
 
 const TARGET_POSITION = 60;
 const HIT_DISTANCE = 25;
@@ -37,7 +23,7 @@ export class MainScene {
 
     for (const direction of DIRECTIONS) {
       // Target arrow sprite
-      const arrow = Sprite.from('images/arrow.png');
+      const arrow = ArrowSprite.realFrom('images/arrow.png', direction);
       arrow.anchor.set(0.5);
       arrow.name = direction.name;
       arrow.rotation = direction.rotation;
@@ -48,9 +34,9 @@ export class MainScene {
       const key = keyboard(direction.key);
       key.press = () => {
         const arrows = this.container.getChildByName('arrows') as Container;
-        const hit = (arrows.children as Sprite[]).find(
+        const hit = (arrows.children as ArrowSprite[]).find(
           (arrow) =>
-            arrow.name === direction.name &&
+            arrow.direction === direction &&
             arrow.position.y < TARGET_POSITION + HIT_DISTANCE &&
             arrow.position.y > TARGET_POSITION - HIT_DISTANCE,
         );
@@ -70,27 +56,30 @@ export class MainScene {
 
   update(delta: number) {
     const arrows = this.container.getChildByName('arrows') as Container;
-    for (const arrow of arrows.children as Sprite[]) {
+    for (const arrow of arrows.children as ArrowSprite[]) {
       arrow.position.y -= delta * this.speed;
+      if (arrow.position.y <= TARGET_POSITION - HIT_DISTANCE) {
+        console.log('miss');
+        arrow.missed = true;
+      }
     }
-    arrows.removeChild(...(arrows.children as Sprite[]).filter((arrow) => arrow.position.y < -arrow.height));
+    arrows.removeChild(...(arrows.children as ArrowSprite[]).filter((arrow) => arrow.position.y < -arrow.height));
 
     this.spawnTimer += delta / 60;
     while (this.spawnTimer > 1) {
-      this.spawnArrow(DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)].name);
+      this.spawnArrow(DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)]);
       this.spawnTimer--;
     }
   }
 
-  spawnArrow(direction: string) {
+  spawnArrow(direction: Direction) {
     const arrows = this.container.getChildByName('arrows') as Container;
-    const arrow = Sprite.from('images/arrow.png');
+    const arrow = ArrowSprite.realFrom('images/arrow.png', direction);
     arrow.anchor.set(0.5);
-    const directionInfo = DIRECTIONS.filter((value) => value.name === direction)[0];
-    arrow.name = directionInfo.name;
-    arrow.rotation = directionInfo.rotation;
-    arrow.tint = directionInfo.color;
-    arrow.position.set(getArrowPosition(directionInfo, arrow.width, this.width), 600 + arrow.height);
+    arrow.name = direction.name;
+    arrow.rotation = direction.rotation;
+    arrow.tint = direction.color;
+    arrow.position.set(getArrowPosition(direction, arrow.width, this.width), 600 + arrow.height);
     arrows.addChild(arrow);
   }
 }
