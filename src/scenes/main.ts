@@ -25,7 +25,6 @@ export class MainScene {
       // Target arrow sprite
       const arrow = ArrowSprite.realFrom('images/arrow.png', direction);
       arrow.anchor.set(0.5);
-      arrow.name = direction.name;
       arrow.rotation = direction.rotation;
       arrow.position.set(getArrowPosition(direction, arrow.width, this.width), TARGET_POSITION);
       this.container.addChild(arrow);
@@ -58,7 +57,7 @@ export class MainScene {
     const arrows = this.container.getChildByName('arrows') as Container;
     for (const arrow of arrows.children as ArrowSprite[]) {
       arrow.position.y -= delta * this.speed;
-      if (arrow.position.y <= TARGET_POSITION - HIT_DISTANCE) {
+      if (arrow.position.y <= TARGET_POSITION - HIT_DISTANCE && !arrow.missed) {
         console.log('miss');
         arrow.missed = true;
       }
@@ -76,7 +75,6 @@ export class MainScene {
     const arrows = this.container.getChildByName('arrows') as Container;
     const arrow = ArrowSprite.realFrom('images/arrow.png', direction);
     arrow.anchor.set(0.5);
-    arrow.name = direction.name;
     arrow.rotation = direction.rotation;
     arrow.tint = direction.color;
     arrow.position.set(getArrowPosition(direction, arrow.width, this.width), 600 + arrow.height);
