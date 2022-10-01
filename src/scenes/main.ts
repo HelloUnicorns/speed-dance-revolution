@@ -1,5 +1,5 @@
 import { Container } from 'pixi.js';
-import { Sound, sound } from '@pixi/sound';
+import { Sound } from '@pixi/sound';
 import { ArrowSprite, Direction, DIRECTIONS, getDirection } from '../sprites/arrow';
 import { keyboard } from '../utils/keyboard';
 
@@ -27,7 +27,7 @@ export class MainScene {
     this.spawnTimer = 0;
     this.accelerationTimer = 0;
     this.speed = 1;
-    this.music = sound.add('autumn-dance', 'music/autumn_dance.mp3');
+    this.music = Sound.from('music/autumn_dance.mp3');
 
     for (const direction of DIRECTIONS) {
       // Target arrow sprite
