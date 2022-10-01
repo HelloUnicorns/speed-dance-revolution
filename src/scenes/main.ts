@@ -4,13 +4,14 @@ interface Direction {
   order: number;
   name: string;
   rotation: number;
+  color: number;
 }
 
 const DIRECTIONS: Direction[] = [
-  { order: 0, name: 'left', rotation: 0 },
-  { order: 1, name: 'down', rotation: 0.75 * PI_2 },
-  { order: 2, name: 'up', rotation: 0.25 * PI_2 },
-  { order: 3, name: 'right', rotation: 0.5 * PI_2 },
+  { order: 0, name: 'left', rotation: 0, color: 0xff3300 },
+  { order: 1, name: 'down', rotation: 0.75 * PI_2, color: 0xffff00 },
+  { order: 2, name: 'up', rotation: 0.25 * PI_2, color: 0x00ff00 },
+  { order: 3, name: 'right', rotation: 0.5 * PI_2, color: 0x3377ff },
 ];
 
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
@@ -63,6 +64,7 @@ export class MainScene {
     arrow.anchor.set(0.5);
     const directionInfo = DIRECTIONS.filter((value) => value.name === direction)[0];
     arrow.rotation = directionInfo.rotation;
+    arrow.tint = directionInfo.color;
     arrow.position.set(getArrowPosition(directionInfo, arrow.width, this.width), 600 + arrow.height);
     arrows.addChild(arrow);
   }
