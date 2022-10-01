@@ -1,4 +1,4 @@
-import { Container } from 'pixi.js';
+import { Container, Text } from 'pixi.js';
 import { ArrowSprite, Direction, DIRECTIONS, getDirection } from '../sprites/arrow';
 import { keyboard } from '../utils/keyboard';
 
@@ -6,25 +6,46 @@ const TARGET_POSITION = 60;
 const HIT_DISTANCE = 25;
 const ACCELERATION = 1.1;
 const ACCELERATION_TIME_DELTA = 10;
+const HIT_SCORE = 10;
 
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
   return appWidth / 2 + (direction.order - 1.5) * arrowWidth * 1.1;
 }
 
 export class MainScene {
-  container: Container;
+  
   width: number;
+  height: number;
   spawnTimer: number;
   accelerationTimer: number;
   speed: number;
+  score: number;
 
-  constructor(width: number) {
-    this.container = new Container();
+  // Graphics
+  container: Container;
+  scoreLabel: Text;
+
+  constructor(width: number, height: number) {
+    
     this.width = width;
+    this.height = height;
     this.spawnTimer = 0;
     this.accelerationTimer = 0;
     this.speed = 1.5;
+    this.score = 0;
 
+    // Graphics
+    this.scoreLabel = new Text('Score: 0', {
+      fontFamily : 'Arial',
+      fontSize: 32,
+      fill : 0x00FF88,
+      align : 'center',
+    });
+    this.scoreLabel.anchor.set(0.5, 1);
+    this.scoreLabel.position.set(this.width / 2, this.height);
+
+    this.container = new Container();
+    
     for (const direction of DIRECTIONS) {
       // Target arrow sprite
       const arrow = ArrowSprite.realFrom('images/arrow.png', direction);
@@ -44,10 +65,10 @@ export class MainScene {
             arrow.position.y > TARGET_POSITION - HIT_DISTANCE,
         );
         if (hit === undefined) {
-          console.log('miss');
+          this.miss();
           return;
         }
-        console.log('hit');
+        this.hit();
         arrows.removeChild(hit);
       };
     }
@@ -57,13 +78,25 @@ export class MainScene {
     this.container.addChild(arrows);
   }
 
+  hit() {
+    console.log('hit');
+    this.score += HIT_SCORE * this.speed * 1000;
+    this.scoreLabel.text = "Score: " + Math.round(this.score).toString();
+  }
+
+  miss(arrow: ArrowSprite = undefined) {
+    console.log('miss');
+    if (arrow != undefined) {
+      arrow.missed = true;
+    }
+  }
+
   update(delta: number) {
     const arrows = this.container.getChildByName('arrows') as Container;
     for (const arrow of arrows.children as ArrowSprite[]) {
       arrow.position.y -= delta * this.speed;
       if (arrow.position.y <= TARGET_POSITION - HIT_DISTANCE && !arrow.missed) {
-        console.log('miss');
-        arrow.missed = true;
+        this.miss(arrow);
       }
     }
     arrows.removeChild(...(arrows.children as ArrowSprite[]).filter((arrow) => arrow.position.y < -arrow.height));
