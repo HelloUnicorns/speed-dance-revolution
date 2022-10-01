@@ -4,6 +4,8 @@ import { keyboard } from '../utils/keyboard';
 
 const TARGET_POSITION = 60;
 const HIT_DISTANCE = 25;
+const ACCELERATION = 1.1;
+const ACCELERATION_TIME_DELTA = 10;
 
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
   return appWidth / 2 + (direction.order - 1.5) * arrowWidth * 1.1;
@@ -13,12 +15,14 @@ export class MainScene {
   container: Container;
   width: number;
   spawnTimer: number;
+  accelerationTimer: number;
   speed: number;
 
   constructor(width: number) {
     this.container = new Container();
     this.width = width;
     this.spawnTimer = 0;
+    this.accelerationTimer = 0;
     this.speed = 1.5;
 
     for (const direction of DIRECTIONS) {
@@ -65,9 +69,16 @@ export class MainScene {
     arrows.removeChild(...(arrows.children as ArrowSprite[]).filter((arrow) => arrow.position.y < -arrow.height));
 
     this.spawnTimer += delta / 60;
-    while (this.spawnTimer > 1) {
+    while (this.spawnTimer > 1 / this.speed) {
       this.spawnArrow(DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)]);
-      this.spawnTimer--;
+      this.spawnTimer -= 1 / this.speed;
+    }
+
+    this.accelerationTimer += delta / 60;
+    while (this.accelerationTimer > ACCELERATION_TIME_DELTA) {
+      console.log("speeding up!");
+      this.speed *= ACCELERATION;
+      this.accelerationTimer -= ACCELERATION_TIME_DELTA;
     }
   }
 
