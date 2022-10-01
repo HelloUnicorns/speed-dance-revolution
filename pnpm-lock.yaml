@@ -3,6 +3,24 @@ lockfileVersion: 5.4
 specifiers:
   '@parcel/config-default': ^2.7.0
   '@parcel/core': ^2.7.0
+  '@pixi/assets': ^6.5.5
+  '@pixi/basis': 6.5.5
+  '@pixi/compressed-textures': 6.5.5
+  '@pixi/constants': 6.5.5
+  '@pixi/core': 6.5.5
+  '@pixi/display': 6.5.5
+  '@pixi/extensions': 6.5.5
+  '@pixi/loaders': 6.5.5
+  '@pixi/math': 6.5.5
+  '@pixi/mesh': 6.5.5
+  '@pixi/runner': 6.5.5
+  '@pixi/settings': 6.5.5
+  '@pixi/sprite': 6.5.5
+  '@pixi/spritesheet': 6.5.5
+  '@pixi/text': 6.5.5
+  '@pixi/text-bitmap': 6.5.5
+  '@pixi/ticker': 6.5.5
+  '@pixi/utils': 6.5.5
   '@types/node': ^18.7.14
   '@typescript-eslint/eslint-plugin': ^5.36.1
   '@typescript-eslint/parser': ^5.36.1
@@ -18,6 +36,24 @@ specifiers:
   typescript: ^4.8.2
 
 dependencies:
+  '@pixi/assets': 6.5.5_xhoggbkifrc3swwsruttm2a5ji
+  '@pixi/basis': 6.5.5_lesvacmkews5wyjdn3tuodschu
+  '@pixi/compressed-textures': 6.5.5_4wkcskuajifjgcgxfpndarjuda
+  '@pixi/constants': 6.5.5
+  '@pixi/core': 6.5.5_kfzcymaadbv2nl5kxqiat24gpi
+  '@pixi/display': 6.5.5_4vref3a4j7aws5icwrgqhykmwm
+  '@pixi/extensions': 6.5.5
+  '@pixi/loaders': 6.5.5_kil77djbjjmlx7tgksyghz4ywe
+  '@pixi/math': 6.5.5
+  '@pixi/mesh': 6.5.5_gylhha4paqajtatr3ym2y3assi
+  '@pixi/runner': 6.5.5
+  '@pixi/settings': 6.5.5
+  '@pixi/sprite': 6.5.5_gylhha4paqajtatr3ym2y3assi
+  '@pixi/spritesheet': 6.5.5_bratvdr7tnrzzouwdf47qgslcu
+  '@pixi/text': 6.5.5_5uzjyi662b6hko6xlfva3mrjvy
+  '@pixi/text-bitmap': 6.5.5_dp4mp4oyyotwgjrhmqj725iswm
+  '@pixi/ticker': 6.5.5_3nrpitcn4gpryk2qhrelew2l4y
+  '@pixi/utils': 6.5.5_rrcncfmabv2i2rzagfcy2t7vuu
   pixi.js: 6.5.5
 
 devDependencies:
@@ -970,6 +1006,47 @@ packages:
       '@pixi/display': 6.5.5_4vref3a4j7aws5icwrgqhykmwm
     dev: false
 
+  /@pixi/assets/6.5.5_xhoggbkifrc3swwsruttm2a5ji:
+    resolution: {integrity: sha512-4XUK/L8wuW++Yglc3AX/HI+WqvhqEWZCMt5pilxbqA5y0JDr86vrt6KmqHPVrTCYGwBjMMWAMHmGsScKQG3OrA==}
+    peerDependencies:
+      '@pixi/basis': 6.5.5
+      '@pixi/compressed-textures': 6.5.5
+      '@pixi/constants': 6.5.5
+      '@pixi/core': 6.5.5
+      '@pixi/settings': 6.5.5
+      '@pixi/spritesheet': 6.5.5
+      '@pixi/text-bitmap': 6.5.5
+      '@pixi/utils': 6.5.5
+    dependencies:
+      '@pixi/basis': 6.5.5_lesvacmkews5wyjdn3tuodschu
+      '@pixi/compressed-textures': 6.5.5_4wkcskuajifjgcgxfpndarjuda
+      '@pixi/constants': 6.5.5
+      '@pixi/core': 6.5.5_kfzcymaadbv2nl5kxqiat24gpi
+      '@pixi/settings': 6.5.5
+      '@pixi/spritesheet': 6.5.5_bratvdr7tnrzzouwdf47qgslcu
+      '@pixi/text-bitmap': 6.5.5_dp4mp4oyyotwgjrhmqj725iswm
+      '@pixi/utils': 6.5.5_rrcncfmabv2i2rzagfcy2t7vuu
+      '@types/css-font-loading-module': 0.0.7
+    dev: false
+
+  /@pixi/basis/6.5.5_lesvacmkews5wyjdn3tuodschu:
+    resolution: {integrity: sha512-4zFRtsPpLNV1fNlqQo3wuD8X716oC3jDiHwn4OK2rYn31dacgbFkhdi9vUHh1RM6cy7KoUdgmUl60z7nQn+XCg==}
+    peerDependencies:
+      '@pixi/compressed-textures': 6.5.5
+      '@pixi/constants': 6.5.5
+      '@pixi/core': 6.5.5
+      '@pixi/loaders': 6.5.5
+      '@pixi/runner': 6.5.5
+      '@pixi/settings': 6.5.5
+    dependencies:
+      '@pixi/compressed-textures': 6.5.5_4wkcskuajifjgcgxfpndarjuda
+      '@pixi/constants': 6.5.5
+      '@pixi/core': 6.5.5_kfzcymaadbv2nl5kxqiat24gpi
+      '@pixi/loaders': 6.5.5_kil77djbjjmlx7tgksyghz4ywe
+      '@pixi/runner': 6.5.5
+      '@pixi/settings': 6.5.5
+    dev: false
+
   /@pixi/compressed-textures/6.5.5_4wkcskuajifjgcgxfpndarjuda:
     resolution: {integrity: sha512-e6T1Kg1o9HLVMniSyHcpgtj2VWQV3cdDizIIvdQs7jbrtZCO5ouehViLP2PWm1ZD63hDj6nyVwmZGvkD7FgH1w==}
     peerDependencies:
@@ -1400,6 +1477,10 @@ packages:
     resolution: {integrity: sha512-L7z9BgrNEcYyUYtF+HaEfiS5ebkh9jXqbszz7pC0hRBPaatV0XjSD3+eHrpqFemQfgwiFF0QPIarnIihIDn7OA==}
     engines: {node: '>=10.13.0'}
     dev: true
+
+  /@types/css-font-loading-module/0.0.7:
+    resolution: {integrity: sha512-nl09VhutdjINdWyXxHWN/w9zlNCfr60JUqJbd24YXUuCwgeL0TpFSdElCwb6cxfB6ybE19Gjj4g0jsgkXxKv1Q==}
+    dev: false
 
   /@types/earcut/2.1.1:
     resolution: {integrity: sha512-w8oigUCDjElRHRRrMvn/spybSMyX8MTkKA5Dv+tS1IE/TgmNZPqUYtvYBXGY8cieSE66gm+szeK+bnbxC2xHTQ==}
