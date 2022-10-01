@@ -1,6 +1,6 @@
 import { Application } from 'pixi.js';
 
-import Arrow from './components/arrow';
+import Arrow from './components/sprites/arrow';
 
 const app = new Application({ width: 800, height: 600 });
 
