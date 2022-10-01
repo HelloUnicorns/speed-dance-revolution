@@ -7,8 +7,9 @@ Assets.load(['images/arrow.png']).then(onAssetsLoaded);
 
 let mainScene: MainScene;
 function onAssetsLoaded() {
-  mainScene = new MainScene(app.view.width);
+  mainScene = new MainScene(app.view.width, app.view.height);
   app.stage.addChild(mainScene.container);
+
   app.start();
 }
 
