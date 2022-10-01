@@ -1,4 +1,5 @@
 import { Container } from 'pixi.js';
+import { Sound, sound } from '@pixi/sound';
 import { ArrowSprite, Direction, DIRECTIONS, getDirection } from '../sprites/arrow';
 import { keyboard } from '../utils/keyboard';
 
@@ -6,6 +7,7 @@ const TARGET_POSITION = 60;
 const HIT_DISTANCE = 25;
 const ACCELERATION = 1.1;
 const ACCELERATION_TIME_DELTA = 10;
+const BASE_ARROW_SPEED = 1.5;
 
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
   return appWidth / 2 + (direction.order - 1.5) * arrowWidth * 1.1;
@@ -17,13 +19,15 @@ export class MainScene {
   spawnTimer: number;
   accelerationTimer: number;
   speed: number;
+  music: Sound;
 
   constructor(width: number) {
     this.container = new Container();
     this.width = width;
     this.spawnTimer = 0;
     this.accelerationTimer = 0;
-    this.speed = 1.5;
+    this.speed = 1;
+    this.music = sound.add('autumn-dance', 'music/autumn_dance.mp3');
 
     for (const direction of DIRECTIONS) {
       // Target arrow sprite
@@ -55,12 +59,13 @@ export class MainScene {
     const arrows = new Container();
     arrows.name = 'arrows';
     this.container.addChild(arrows);
+    this.music.play();
   }
 
   update(delta: number) {
     const arrows = this.container.getChildByName('arrows') as Container;
     for (const arrow of arrows.children as ArrowSprite[]) {
-      arrow.position.y -= delta * this.speed;
+      arrow.position.y -= delta * BASE_ARROW_SPEED * this.speed;
       if (arrow.position.y <= TARGET_POSITION - HIT_DISTANCE && !arrow.missed) {
         console.log('miss');
         arrow.missed = true;
@@ -78,6 +83,7 @@ export class MainScene {
     while (this.accelerationTimer > ACCELERATION_TIME_DELTA) {
       console.log("speeding up!");
       this.speed *= ACCELERATION;
+      this.music.speed = this.speed;
       this.accelerationTimer -= ACCELERATION_TIME_DELTA;
     }
   }
