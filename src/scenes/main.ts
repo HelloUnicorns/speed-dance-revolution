@@ -16,6 +16,9 @@ const DIRECTIONS: Direction[] = [
   { order: 3, name: 'right', rotation: 0.5 * PI_2, color: 0x3377ff, key: 'ArrowRight' },
 ];
 
+const TARGET_POSITION = 60;
+const HIT_DISTANCE = 25;
+
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
   return appWidth / 2 + (direction.order - 1.5) * arrowWidth * 1.1;
 }
@@ -33,18 +36,30 @@ export class MainScene {
     this.speed = 1.5;
 
     for (const direction of DIRECTIONS) {
-      // Static arrow sprite
+      // Target arrow sprite
       const arrow = Sprite.from('images/arrow.png');
       arrow.anchor.set(0.5);
       arrow.name = direction.name;
       arrow.rotation = direction.rotation;
-      arrow.position.set(getArrowPosition(direction, arrow.width, this.width), 60);
+      arrow.position.set(getArrowPosition(direction, arrow.width, this.width), TARGET_POSITION);
       this.container.addChild(arrow);
 
       // Key handler
       const key = keyboard(direction.key);
       key.press = () => {
-        console.log(`${direction.name} pressed`);
+        const arrows = this.container.getChildByName('arrows') as Container;
+        const hit = (arrows.children as Sprite[]).find(
+          (arrow) =>
+            arrow.name === direction.name &&
+            arrow.position.y < TARGET_POSITION + HIT_DISTANCE &&
+            arrow.position.y > TARGET_POSITION - HIT_DISTANCE,
+        );
+        if (hit === undefined) {
+          console.log('miss');
+          return;
+        }
+        console.log('hit');
+        arrows.removeChild(hit);
       };
     }
 
@@ -72,6 +87,7 @@ export class MainScene {
     const arrow = Sprite.from('images/arrow.png');
     arrow.anchor.set(0.5);
     const directionInfo = DIRECTIONS.filter((value) => value.name === direction)[0];
+    arrow.name = directionInfo.name;
     arrow.rotation = directionInfo.rotation;
     arrow.tint = directionInfo.color;
     arrow.position.set(getArrowPosition(directionInfo, arrow.width, this.width), 600 + arrow.height);
