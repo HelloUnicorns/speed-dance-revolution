@@ -38,7 +38,7 @@ export class TargetArrowSprite extends ArrowSprite {
     if (this.timer !== undefined) {
       clearTimeout(this.timer);
     }
-    console.log(`setting timer for ${timeout} seconds`);
+    console.log(`setting timer for ${timeout} miliseconds`);
     this.timer = setTimeout(() => this.clearHit(), timeout);
   }
 }
