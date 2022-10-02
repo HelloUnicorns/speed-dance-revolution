@@ -96,6 +96,7 @@ export class MainScene {
 
     const arrows = this.container.getChildByName('arrows') as Container;
     for (const arrow of arrows.children as ArrowSprite[]) {
+      arrow.position.y -= delta * this.song.baseSpeed * this.speed;
       if (arrow.position.y <= TARGET_POSITION - HIT_DISTANCE && !arrow.missed) {
         console.log('miss');
         arrow.missed = true;
