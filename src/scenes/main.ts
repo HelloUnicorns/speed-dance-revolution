@@ -194,11 +194,9 @@ export class MainScene {
       this.accelerationTimer -= ACCELERATION_TIME_DELTA;
     }
 
-    if (this.songTimer >= this.song.fadeOutStart && this.song.fadeOutEnd) {
-      console.log('decrease volume');
+    if (this.songTimer >= this.song.fadeOutStart && this.songTimer < this.song.fadeOutEnd) {
       this.music.volume -= ((VOLUME / (this.song.fadeOutEnd - this.song.fadeOutStart)) * delta) / 60;
     } else if (this.songTimer >= this.song.fadeOutEnd) {
-      console.log('mute volume');
       this.music.volume = 0;
     }
   }
