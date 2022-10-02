@@ -3,7 +3,7 @@ import { Sound } from '@pixi/sound';
 import { ArrowSprite, Direction, DIRECTIONS, getDirection } from '../sprites/arrow';
 import { keyboard } from '../utils/keyboard';
 import { Song } from '../songs/song';
-import { autumnDance } from '../songs/autumn-dance';
+import { autumnDance } from '../songs/autumnDance';
 import { ACCELERATION, ACCELERATION_TIME_DELTA, ARROW_HEIGHT, TARGET_POSITION } from '../consts';
 
 const HIT_DISTANCE = 25;
