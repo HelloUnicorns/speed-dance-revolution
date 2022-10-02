@@ -5,6 +5,7 @@ import { keyboard } from '../utils/keyboard';
 import { Song } from '../songs/song';
 import { autumnDance } from '../songs/autumnDance';
 import { ACCELERATION, ACCELERATION_TIME_DELTA, ARROW_HEIGHT, TARGET_POSITION } from '../consts';
+import { getHitMessage, getMissMessage } from '../utils/messages';
 
 const HIT_DISTANCE = 25;
 const HIT_SCORE = 10;
@@ -50,12 +51,12 @@ export class MainScene {
     startButton.buttonMode = true;
     startButton.on('pointerdown', this.start, this);
     this.container.addChild(startButton);
-    
+
     const scoreLabel = new Text('Score: 0', {
-      fontFamily : 'Arial',
+      fontFamily: 'Arial',
       fontSize: 32,
-      fill : 0x00FF88,
-      align : 'center',
+      fill: 0x00ff88,
+      align: 'center',
     });
     scoreLabel.anchor.set(0.5, 1);
     scoreLabel.position.set(this.width / 2, this.height);
@@ -63,9 +64,9 @@ export class MainScene {
     this.container.addChild(scoreLabel);
 
     const comboLabel = new Text('Combo: 0', {
-      fontFamily : 'Arial',
+      fontFamily: 'Arial',
       fontSize: 32,
-      fill : 0xFFFFFF
+      fill: 0xffffff,
     });
     comboLabel.anchor.set(0, 1);
     comboLabel.position.set(0, this.height);
@@ -122,32 +123,43 @@ export class MainScene {
   updateCombo(newCombo: number) {
     if (newCombo === this.combo) return;
     const comboLabel = this.container.getChildByName('combo') as Text;
-    comboLabel.tint = newCombo === 0 ? 0xFF0000 : 0xFFFFFF;
-    comboLabel.text = newCombo === 0 ? "MISS" : "Combo: " + newCombo.toString();
+    comboLabel.tint = newCombo === 0 ? 0xff0000 : 0xffffff;
+    setTimeout(() => {
+      comboLabel.text = 'Combo: ' + newCombo.toString();
+    }, 500);
+
     this.combo = newCombo;
   }
 
   hit() {
     console.log('hit');
 
+    const hitMessage = getHitMessage();
+    const comboLabel = this.container.getChildByName('combo') as Text;
+
+    comboLabel.text = hitMessage;
     this.updateCombo(this.combo + 1);
     /* The score is multiplied by:
-    *   1 if combo < 10
-    *   2 if 10 <= combo < 20
-    *   3 if 20 <= combo < 30
-    *   ...
-    *   11 if combo >= 100
-    */
-    const comboMultiplier = Math.min(MAX_SCORE_COMBO_MULTIPLIER,
-      1 + Math.floor(this.combo / COMBO_LEVEL_LENGTH));
+     *   1 if combo < 10
+     *   2 if 10 <= combo < 20
+     *   3 if 20 <= combo < 30
+     *   ...
+     *   11 if combo >= 100
+     */
+    const comboMultiplier = Math.min(MAX_SCORE_COMBO_MULTIPLIER, 1 + Math.floor(this.combo / COMBO_LEVEL_LENGTH));
     this.score += HIT_SCORE * this.speed * comboMultiplier;
 
     const scoreLabel = this.container.getChildByName('score') as Text;
-    scoreLabel.text = "Score: " + Math.round(this.score).toString();
+    scoreLabel.text = 'Score: ' + Math.round(this.score).toString();
   }
 
   miss(arrow?: ArrowSprite) {
     console.log('miss');
+    const missMessage = getMissMessage();
+    const comboLabel = this.container.getChildByName('combo') as Text;
+
+    comboLabel.text = missMessage;
+
     this.updateCombo(0);
     if (arrow !== undefined) {
       arrow.missed = true;
