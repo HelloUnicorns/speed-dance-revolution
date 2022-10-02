@@ -1,3 +1,7 @@
+import { ACCELERATION, ACCELERATION_TIME_DELTA, APP_HEIGHT, ARROW_HEIGHT, TARGET_POSITION } from '../consts';
+
+export const SPAWN_TO_TARGET = APP_HEIGHT + ARROW_HEIGHT - TARGET_POSITION;
+
 interface Note {
   time: number;
   direction: 'up' | 'down' | 'left' | 'right';
@@ -13,16 +17,6 @@ export interface Song {
 
 const FPS = 60;
 const SECONDS_IN_MINUTE = 60;
-
-// Song acceleration constants
-const ACCELERATION_TIME_DELTA = 10;
-const ACCELERATION = 1.1;
-
-// Arrow location constants
-const ARROW_HEIGHT = 75;
-const APP_HEIGHT = 600;
-const TARGET_POSITION = 60;
-const SPAWN_TO_TARGET = APP_HEIGHT + ARROW_HEIGHT - TARGET_POSITION;
 
 export function beatsToSpawnTime(song: Song): Song {
   const realBaseArrowSpeed = song.baseArrowSpeed * FPS;
@@ -41,14 +35,18 @@ export function beatsToSpawnTime(song: Song): Song {
       speedIndex++;
       speed *= ACCELERATION;
     }
-    note.time -= changeSpeedTime - speedIndex * ACCELERATION_TIME_DELTA + (note.time - changeSpeedTime) * (1 - 1 / speed);
+    note.time -=
+      changeSpeedTime - speedIndex * ACCELERATION_TIME_DELTA + (note.time - changeSpeedTime) * (1 - 1 / speed);
 
     // Change not time in game to its spawn time
     const realSpeed = speed * realBaseArrowSpeed;
     if (note.time - SPAWN_TO_TARGET / realSpeed >= speedIndex * ACCELERATION_TIME_DELTA) {
       note.time -= SPAWN_TO_TARGET / realSpeed;
     } else {
-      note.time = note.time - SPAWN_TO_TARGET * ACCELERATION / realSpeed + (ACCELERATION - 1) * (note.time - speedIndex * ACCELERATION_TIME_DELTA);
+      note.time =
+        note.time -
+        (SPAWN_TO_TARGET * ACCELERATION) / realSpeed +
+        (ACCELERATION - 1) * (note.time - speedIndex * ACCELERATION_TIME_DELTA);
     }
   }
   song.notes = song.notes.sort((a, b) => a.time - b.time);

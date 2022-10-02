@@ -4,11 +4,9 @@ import { ArrowSprite, Direction, DIRECTIONS, getDirection } from '../sprites/arr
 import { keyboard } from '../utils/keyboard';
 import { Song } from '../songs/song';
 import { autumnDance } from '../songs/autumn-dance';
+import { ACCELERATION, ACCELERATION_TIME_DELTA, ARROW_HEIGHT, TARGET_POSITION } from '../consts';
 
-const TARGET_POSITION = 60;
 const HIT_DISTANCE = 25;
-const ACCELERATION = 1.1;
-const ACCELERATION_TIME_DELTA = 10;
 
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
   return appWidth / 2 + (direction.order - 1.5) * arrowWidth * 1.1;
@@ -47,6 +45,7 @@ export class MainScene {
     for (const direction of DIRECTIONS) {
       // Target arrow sprite
       const arrow = ArrowSprite.realFrom('images/arrow.png', direction);
+      arrow.scale.set(ARROW_HEIGHT / arrow.height);
       arrow.anchor.set(0.5);
       arrow.rotation = direction.rotation;
       arrow.position.set(getArrowPosition(direction, arrow.width, this.width), TARGET_POSITION);
@@ -125,6 +124,7 @@ export class MainScene {
   spawnArrow(direction: Direction) {
     const arrows = this.container.getChildByName('arrows') as Container;
     const arrow = ArrowSprite.realFrom('images/arrow.png', direction);
+    arrow.scale.set(ARROW_HEIGHT / arrow.height);
     arrow.anchor.set(0.5);
     arrow.rotation = direction.rotation;
     arrow.tint = direction.color;
