@@ -1,6 +1,6 @@
 import { Container, Text } from 'pixi.js';
 import { Song } from '../songs/song';
-import { SongSelectButton } from '../sprites/songSelectButton';
+import { createSongSelectButton } from '../sprites/songSelectButton';
 
 export class SelectSongScene {
   container: Container;
@@ -19,7 +19,7 @@ export class SelectSongScene {
     this.container.addChild(header);
 
     songs.forEach((song, index) => {
-      const button = SongSelectButton.create(song, songSelectCallback);
+      const button = createSongSelectButton(song, songSelectCallback);
       button.position.set(width / 2 - button.width / 2, 200 - button.height / 2 + 120 * index);
       this.container.addChild(button);
     });
