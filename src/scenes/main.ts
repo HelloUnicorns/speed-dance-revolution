@@ -1,6 +1,8 @@
 import { Container, Sprite, Text } from 'pixi.js';
 import { Sound } from '@pixi/sound';
 import { ArrowSprite, Direction, DIRECTIONS, getDirection } from '../sprites/arrow';
+import { TargetArrowSprite } from '../sprites/targetArrow';
+import { TargetArrowContainer } from '../sprites/targetArrowContainer';
 import { keyboard } from '../utils/keyboard';
 import { Song } from '../songs/song';
 import { autumnDance } from '../songs/autumnDance';
@@ -50,12 +52,12 @@ export class MainScene {
     startButton.buttonMode = true;
     startButton.on('pointerdown', this.start, this);
     this.container.addChild(startButton);
-    
+
     const scoreLabel = new Text('Score: 0', {
-      fontFamily : 'Arial',
+      fontFamily: 'Arial',
       fontSize: 32,
-      fill : 0x00FF88,
-      align : 'center',
+      fill: 0x00ff88,
+      align: 'center',
     });
     scoreLabel.anchor.set(0.5, 1);
     scoreLabel.position.set(this.width / 2, this.height);
@@ -63,9 +65,9 @@ export class MainScene {
     this.container.addChild(scoreLabel);
 
     const comboLabel = new Text('Combo: 0', {
-      fontFamily : 'Arial',
+      fontFamily: 'Arial',
       fontSize: 32,
-      fill : 0xFFFFFF
+      fill: 0xffffff,
     });
     comboLabel.anchor.set(0, 1);
     comboLabel.position.set(0, this.height);
@@ -73,31 +75,32 @@ export class MainScene {
     this.container.addChild(comboLabel);
     this.updateCombo(0);
 
+    const targetArrows = new TargetArrowContainer();
+    targetArrows.name = 'targetArrows';
+    this.container.addChild(targetArrows);
     for (const direction of DIRECTIONS) {
       // Target arrow sprite
-      const arrow = ArrowSprite.realFrom('images/arrow.png', direction);
+      const arrow = targetArrows.getChildByDirection(direction) as TargetArrowSprite;
       arrow.scale.set(ARROW_HEIGHT / arrow.height);
       arrow.anchor.set(0.5);
-      arrow.rotation = direction.rotation;
       arrow.position.set(getArrowPosition(direction, arrow.width, this.width), TARGET_POSITION);
-      this.container.addChild(arrow);
 
       // Key handler
       const key = keyboard(direction.key);
       key.press = () => {
-        const arrows = this.container.getChildByName('arrows') as Container;
-        const hit = (arrows.children as ArrowSprite[]).find(
+        const arrows: Container = this.container.getChildByName('arrows');
+        const hitArrow = (arrows.children as ArrowSprite[]).find(
           (arrow) =>
             arrow.direction === direction &&
             arrow.position.y < TARGET_POSITION + HIT_DISTANCE &&
             arrow.position.y > TARGET_POSITION - HIT_DISTANCE,
         );
-        if (hit === undefined) {
+        if (hitArrow === undefined) {
           this.miss();
           return;
         }
-        this.hit();
-        arrows.removeChild(hit);
+        this.hit(hitArrow.direction);
+        arrows.removeChild(hitArrow);
       };
     }
 
@@ -121,29 +124,32 @@ export class MainScene {
 
   updateCombo(newCombo: number) {
     if (newCombo === this.combo) return;
-    const comboLabel = this.container.getChildByName('combo') as Text;
-    comboLabel.tint = newCombo === 0 ? 0xFF0000 : 0xFFFFFF;
-    comboLabel.text = newCombo === 0 ? "MISS" : "Combo: " + newCombo.toString();
+    const comboLabel: Text = this.container.getChildByName('combo');
+    comboLabel.tint = newCombo === 0 ? 0xff0000 : 0xffffff;
+    comboLabel.text = newCombo === 0 ? 'MISS' : 'Combo: ' + newCombo.toString();
     this.combo = newCombo;
   }
 
-  hit() {
+  hit(direction: Direction) {
     console.log('hit');
 
     this.updateCombo(this.combo + 1);
     /* The score is multiplied by:
-    *   1 if combo < 10
-    *   2 if 10 <= combo < 20
-    *   3 if 20 <= combo < 30
-    *   ...
-    *   11 if combo >= 100
-    */
-    const comboMultiplier = Math.min(MAX_SCORE_COMBO_MULTIPLIER,
-      1 + Math.floor(this.combo / COMBO_LEVEL_LENGTH));
+     *   1 if combo < 10
+     *   2 if 10 <= combo < 20
+     *   3 if 20 <= combo < 30
+     *   ...
+     *   11 if combo >= 100
+     */
+    const comboMultiplier = Math.min(MAX_SCORE_COMBO_MULTIPLIER, 1 + Math.floor(this.combo / COMBO_LEVEL_LENGTH));
     this.score += HIT_SCORE * this.speed * comboMultiplier;
 
-    const scoreLabel = this.container.getChildByName('score') as Text;
-    scoreLabel.text = "Score: " + Math.round(this.score).toString();
+    const scoreLabel: Text = this.container.getChildByName('score');
+    scoreLabel.text = 'Score: ' + Math.round(this.score).toString();
+
+    const targetArrows: TargetArrowContainer = this.container.getChildByName('targetArrows');
+    const arrow = targetArrows.getChildByDirection(direction) as TargetArrowSprite;
+    arrow.hit(TargetArrowSprite.DEFAULT_TIMEOUT / this.speed);
   }
 
   miss(arrow?: ArrowSprite) {
@@ -155,11 +161,9 @@ export class MainScene {
   }
 
   update(delta: number) {
-    if (!this.started) {
-      return;
-    }
+    if (!this.started) return;
 
-    const arrows = this.container.getChildByName('arrows') as Container;
+    const arrows: Container = this.container.getChildByName('arrows');
     for (const arrow of arrows.children as ArrowSprite[]) {
       arrow.position.y -= delta * this.song.baseArrowSpeed * this.speed;
       if (arrow.position.y <= TARGET_POSITION - HIT_DISTANCE && !arrow.missed) {
@@ -187,7 +191,7 @@ export class MainScene {
   }
 
   spawnArrow(direction: Direction) {
-    const arrows = this.container.getChildByName('arrows') as Container;
+    const arrows: Container = this.container.getChildByName('arrows');
     const arrow = ArrowSprite.realFrom('images/arrow.png', direction);
     arrow.scale.set(ARROW_HEIGHT / arrow.height);
     arrow.anchor.set(0.5);

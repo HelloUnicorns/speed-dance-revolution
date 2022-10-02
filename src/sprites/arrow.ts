@@ -16,7 +16,7 @@ export const DIRECTIONS: Direction[] = [
 ];
 
 export function getDirection(name: string) {
-  return DIRECTIONS.find(direction => direction.name === name);
+  return DIRECTIONS.find((direction) => direction.name === name);
 }
 
 export class ArrowSprite extends Sprite {
@@ -30,7 +30,7 @@ export class ArrowSprite extends Sprite {
   }
 
   static realFrom(source: SpriteSource, direction: Direction, options?: IBaseTextureOptions): ArrowSprite {
-    var texture = source instanceof Texture ? source : Texture.from(source, options);
+    const texture = source instanceof Texture ? source : Texture.from(source, options);
     return new ArrowSprite(texture, direction);
   }
 }
