@@ -15,6 +15,7 @@ specifiers:
   '@pixi/mesh': 6.5.5
   '@pixi/runner': 6.5.5
   '@pixi/settings': 6.5.5
+  '@pixi/sound': ^4.3.1
   '@pixi/sprite': 6.5.5
   '@pixi/spritesheet': 6.5.5
   '@pixi/text': 6.5.5
@@ -48,6 +49,7 @@ dependencies:
   '@pixi/mesh': 6.5.5_gylhha4paqajtatr3ym2y3assi
   '@pixi/runner': 6.5.5
   '@pixi/settings': 6.5.5
+  '@pixi/sound': 4.3.1_qt2kyexxkeubiue2lkzcn64aum
   '@pixi/sprite': 6.5.5_gylhha4paqajtatr3ym2y3assi
   '@pixi/spritesheet': 6.5.5_bratvdr7tnrzzouwdf47qgslcu
   '@pixi/text': 6.5.5_5uzjyi662b6hko6xlfva3mrjvy
@@ -1339,6 +1341,20 @@ packages:
 
   /@pixi/settings/6.5.5:
     resolution: {integrity: sha512-U6xeE9Ri10Rm0Ttjhxc0vc2Qzu2NhB9j/YjvO5NwtW6Adx1SsGz71Pgmebt/FoR4OKU4rtDnRKZOfem7LCFoCA==}
+    dev: false
+
+  /@pixi/sound/4.3.1_qt2kyexxkeubiue2lkzcn64aum:
+    resolution: {integrity: sha512-KpzJIErU2UbgrrI/6cIbZ0BsWPUDma86TyB9vz7cyJ9W4MHVZx1EYCJ0CeWh2XGtvzbUVOozLPnR18ObPZKokA==}
+    peerDependencies:
+      '@pixi/core': '>=5 <7'
+      '@pixi/loaders': '>=5 <7'
+      '@pixi/ticker': '>=5 <7'
+      '@pixi/utils': '>=5 <7'
+    dependencies:
+      '@pixi/core': 6.5.5_kfzcymaadbv2nl5kxqiat24gpi
+      '@pixi/loaders': 6.5.5_kil77djbjjmlx7tgksyghz4ywe
+      '@pixi/ticker': 6.5.5_3nrpitcn4gpryk2qhrelew2l4y
+      '@pixi/utils': 6.5.5_rrcncfmabv2i2rzagfcy2t7vuu
     dev: false
 
   /@pixi/sprite-animated/6.5.5_3bmkdpigmybchotspljhfkyujm:

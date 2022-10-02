@@ -1,6 +1,6 @@
-import { Container } from "pixi.js";
-import { Direction, DIRECTIONS } from "./arrow";
-import { TargetArrowSprite } from "./targetArrow";
+import { Container } from 'pixi.js';
+import { Direction, DIRECTIONS } from './arrow';
+import { TargetArrowSprite } from './targetArrow';
 
 export class TargetArrowContainer extends Container {
   constructor() {

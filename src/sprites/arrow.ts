@@ -16,7 +16,7 @@ export const DIRECTIONS: Direction[] = [
 ];
 
 export function getDirection(name: string) {
-  return DIRECTIONS.find(direction => direction.name === name);
+  return DIRECTIONS.find((direction) => direction.name === name);
 }
 
 export class ArrowSprite extends Sprite {

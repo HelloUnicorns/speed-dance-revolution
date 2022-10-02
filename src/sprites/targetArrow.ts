@@ -19,7 +19,7 @@ export class TargetArrowSprite extends ArrowSprite {
 
   static create(direction: Direction) {
     const defaultTexture = Texture.from(ARROW_PATH);
-    const hitTexture = Texture.from(ARROW_HIT_PATH); 
+    const hitTexture = Texture.from(ARROW_HIT_PATH);
 
     return new TargetArrowSprite(defaultTexture, hitTexture, direction);
   }
@@ -38,7 +38,7 @@ export class TargetArrowSprite extends ArrowSprite {
     if (this.timer !== undefined) {
       clearTimeout(this.timer);
     }
-    console.log(`setting timer for ${timeout} seconds`);
+    console.log(`setting timer for ${timeout} miliseconds`);
     this.timer = setTimeout(() => this.clearHit(), timeout);
   }
 }
