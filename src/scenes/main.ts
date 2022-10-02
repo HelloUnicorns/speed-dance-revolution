@@ -136,7 +136,7 @@ export class MainScene {
   }
 
   hit(direction: Direction) {
-    // console.log('hit');
+    console.log('hit');
 
     this.updateCombo(this.combo + 1);
     /* The score is multiplied by:
@@ -158,7 +158,7 @@ export class MainScene {
   }
 
   miss(arrow?: ArrowSprite) {
-    // console.log('miss');
+    console.log('miss');
     this.updateCombo(0);
     if (arrow !== undefined) {
       arrow.missed = true;
@@ -188,7 +188,7 @@ export class MainScene {
 
     this.accelerationTimer += delta / 60;
     while (this.accelerationTimer > ACCELERATION_TIME_DELTA) {
-      // console.log('speeding up!');
+      console.log('speeding up!');
       this.speed *= ACCELERATION;
       this.music.speed = this.speed;
       this.accelerationTimer -= ACCELERATION_TIME_DELTA;
