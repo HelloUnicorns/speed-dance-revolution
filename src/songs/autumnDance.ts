@@ -7,8 +7,10 @@ export const autumnDance: Song = beatsToSpawnTime({
   bpm: 106 / 2,
   notes: [
     { time: 0, direction: 'left' },
+    { time: 0, direction: 'up' },
     { time: 1, direction: 'right' },
     { time: 2, direction: 'left' },
+    { time: 2, direction: 'up' },
     { time: 3, direction: 'right' },
     { time: 4, direction: 'left' },
     { time: 5, direction: 'right' },
