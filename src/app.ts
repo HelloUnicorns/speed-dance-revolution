@@ -17,4 +17,12 @@ app.ticker.add((delta: number) => {
   mainScene.update(delta);
 });
 
+document.addEventListener('visibilitychange', () => {
+  if (document.hidden) {
+    mainScene.pause();
+  } else {
+    mainScene.resume();
+  }
+});
+
 export default app;

@@ -27,7 +27,7 @@ export class MainScene {
   song: Song;
   currentNoteIndex: number;
   music: Sound;
-  started: boolean;
+  running: boolean;
   score: number;
   combo: number;
 
@@ -40,7 +40,7 @@ export class MainScene {
     this.speed = 1;
     this.song = autumnDance;
     this.currentNoteIndex = 0;
-    this.started = false;
+    this.running = false;
     this.score = 0;
     this.combo = 0;
 
@@ -117,9 +117,21 @@ export class MainScene {
       loaded: () => {
         this.music.volume = 0.08;
         this.music.play();
-        this.started = true;
+        this.running = true;
       },
     });
+  }
+
+  pause() {
+    if (!this.running) return;
+    this.running = false;
+    this.music.pause();
+  }
+
+  resume() {
+    if (this.running) return;
+    this.music.resume();
+    this.running = true;
   }
 
   updateCombo(newCombo: number) {
@@ -161,7 +173,7 @@ export class MainScene {
   }
 
   update(delta: number) {
-    if (!this.started) return;
+    if (!this.running) return;
 
     const arrows: Container = this.container.getChildByName('arrows');
     for (const arrow of arrows.children as ArrowSprite[]) {
