@@ -1,7 +1,7 @@
 import { beatsToSpawnTime, Song } from './song';
 
 export const autumnDance: Song = beatsToSpawnTime({
-  name: 'autumn-dance',
+  name: 'Autumn Dance',
   source: 'music/autumn_dance.mp3',
   baseArrowSpeed: 1.6,
   bpm: 106 / 2,
