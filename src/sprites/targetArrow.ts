@@ -15,7 +15,6 @@ export class TargetArrowSprite extends ArrowSprite {
     super(defaultTexture, direction);
     this.defaultTexture = defaultTexture;
     this.hitTexture = hitTexture;
-    this.timer = undefined;
   }
 
   static create(direction: Direction) {
