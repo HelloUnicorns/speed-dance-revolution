@@ -5,6 +5,9 @@ export const autumnDance: Song = beatsToSpawnTime({
   source: 'music/autumn_dance.mp3',
   baseArrowSpeed: 1.6,
   bpm: 106 / 2,
+  fadeOutStart: 140,
+  fadeOutEnd: 144,
+  end: 144,
   notes: [
     // Section 1: only bass and snare
     { time: 0, direction: 'left' },

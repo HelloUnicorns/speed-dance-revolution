@@ -12,6 +12,7 @@ const HIT_DISTANCE = 25;
 const HIT_SCORE = 10;
 const MAX_SCORE_COMBO_MULTIPLIER = 11;
 const COMBO_LEVEL_LENGTH = 10;
+const VOLUME = 0.08;
 
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
   return appWidth / 2 + (direction.order - 1.5) * arrowWidth * 1.1;
@@ -113,11 +114,15 @@ export class MainScene {
     this.container.removeChild(this.container.getChildByName('start-button'));
     this.music = Sound.from({
       url: this.song.source,
+      sprites: { song: { start: 0, end: this.song.end } },
       preload: true,
       loaded: () => {
-        this.music.volume = 0.08;
-        this.music.play();
+        this.music.volume = VOLUME;
+        this.music.play('song');
         this.started = true;
+      },
+      complete: () => {
+        console.log('done');
       },
     });
   }
@@ -187,6 +192,14 @@ export class MainScene {
       this.speed *= ACCELERATION;
       this.music.speed = this.speed;
       this.accelerationTimer -= ACCELERATION_TIME_DELTA;
+    }
+
+    if (this.songTimer >= this.song.fadeOutStart && this.song.fadeOutEnd) {
+      console.log('decrease volume');
+      this.music.volume -= ((VOLUME / (this.song.fadeOutEnd - this.song.fadeOutStart)) * delta) / 60;
+    } else if (this.songTimer >= this.song.fadeOutEnd) {
+      console.log('mute volume');
+      this.music.volume = 0;
     }
   }
 
