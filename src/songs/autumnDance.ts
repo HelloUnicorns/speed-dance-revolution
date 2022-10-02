@@ -79,7 +79,10 @@ export const autumnDance: Song = beatsToSpawnTime({
     { time: 31.5, direction: 'left' },
     { time: 32, direction: 'right' },
     { time: 32.75, direction: 'left' },
-    // More hirtutim
+    { time: 34.75, direction: 'right'},
+    { time: 35.25, direction: 'left'},
+    { time: 35.75, direction: 'down'},
+    // Again
     { time: 36, direction: 'right' },
     { time: 36.75, direction: 'left' },
     { time: 37.5, direction: 'right' },
@@ -88,7 +91,10 @@ export const autumnDance: Song = beatsToSpawnTime({
     { time: 39.5, direction: 'left' },
     { time: 40, direction: 'right' },
     { time: 40.75, direction: 'left' },
-    // more hirtutim
+    { time: 42.75, direction: 'right'},
+    { time: 43.25, direction: 'left'},
+    { time: 43.75, direction: 'down'},
+    // Again
     { time: 44, direction: 'right' },
     { time: 44.75, direction: 'left' },
     { time: 45.5, direction: 'right' },
@@ -96,8 +102,12 @@ export const autumnDance: Song = beatsToSpawnTime({
     { time: 46.125, direction: 'right' },
     { time: 47.5, direction: 'left' },
     { time: 48, direction: 'right' },
+    { time: 48.25, direction: 'down' }, // Variation
     { time: 48.75, direction: 'left' },
-    // more hirtutim
+    { time: 50.75, direction: 'right'},
+    { time: 51.25, direction: 'left'},
+    { time: 51.75, direction: 'down'},
+    // Again
     { time: 52, direction: 'right' },
     { time: 52.75, direction: 'left' },
     { time: 53.5, direction: 'right' },
@@ -147,7 +157,10 @@ export const autumnDance: Song = beatsToSpawnTime({
     { time: 75.5, direction: 'left' },
     { time: 76, direction: 'right' },
     { time: 76.75, direction: 'left' },
-    // More hirtutim
+    { time: 78.75, direction: 'right'},
+    { time: 79.25, direction: 'left'},
+    { time: 79.75, direction: 'down'},
+    // Again
     { time: 80, direction: 'right' },
     { time: 80.75, direction: 'left' },
     { time: 81.5, direction: 'right' },
@@ -156,7 +169,10 @@ export const autumnDance: Song = beatsToSpawnTime({
     { time: 83.5, direction: 'left' },
     { time: 84, direction: 'right' },
     { time: 84.75, direction: 'left' },
-    // more hirtutim
+    { time: 86.75, direction: 'right'},
+    { time: 87.25, direction: 'left'},
+    { time: 87.75, direction: 'down'},
+    // Again
     { time: 88, direction: 'right' },
     { time: 88.75, direction: 'left' },
     { time: 89.5, direction: 'right' },
@@ -164,8 +180,12 @@ export const autumnDance: Song = beatsToSpawnTime({
     { time: 90.125, direction: 'right' },
     { time: 91.5, direction: 'left' },
     { time: 92, direction: 'right' },
+    { time: 92.25, direction: 'down' }, // Variation
     { time: 92.75, direction: 'left' },
-    // more hirtutim
+    { time: 94.75, direction: 'right'},
+    { time: 95.25, direction: 'left'},
+    { time: 95.75, direction: 'down'},
+    // Again
     { time: 96, direction: 'right' },
     { time: 96.75, direction: 'left' },
     { time: 97.5, direction: 'right' },
@@ -174,32 +194,32 @@ export const autumnDance: Song = beatsToSpawnTime({
     { time: 99.5, direction: 'left' },
 
     // Section 4
-    { time: 100, direction: 'left' },
+    { time: 100, direction: 'up' },
     { time: 100, direction: 'right' },
-    { time: 100.5, direction: 'left' },
+    { time: 100.5, direction: 'up' },
     { time: 100.5, direction: 'right' },
-    { time: 101, direction: 'left' },
+    { time: 101, direction: 'up' },
     { time: 101, direction: 'right' },
     // Again
-    { time: 104, direction: 'up' },
+    { time: 104, direction: 'left' },
     { time: 104, direction: 'down' },
-    { time: 104.5, direction: 'up' },
+    { time: 104.5, direction: 'left' },
     { time: 104.5, direction: 'down' },
-    { time: 105, direction: 'up' },
+    { time: 105, direction: 'left' },
     { time: 105, direction: 'down' },
     // Again
-    { time: 108, direction: 'left' },
+    { time: 108, direction: 'up' },
     { time: 108, direction: 'right' },
-    { time: 108.5, direction: 'left' },
+    { time: 108.5, direction: 'up' },
     { time: 108.5, direction: 'right' },
-    { time: 109, direction: 'left' },
+    { time: 109, direction: 'up' },
     { time: 109, direction: 'right' },
     // Again
-    { time: 112, direction: 'up' },
+    { time: 112, direction: 'left' },
     { time: 112, direction: 'down' },
-    { time: 112.5, direction: 'up' },
+    { time: 112.5, direction: 'left' },
     { time: 112.5, direction: 'down' },
-    { time: 113, direction: 'up' },
+    { time: 113, direction: 'left' },
     { time: 113, direction: 'down' },
     // Again
     { time: 116, direction: 'left' },
