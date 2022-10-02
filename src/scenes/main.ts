@@ -1,5 +1,7 @@
-import { Container, Text, Texture } from 'pixi.js';
-import { TargetArrowSprite, ArrowSprite, Direction, DIRECTIONS, getDirection } from '../sprites/arrow';
+import { Container, Text } from 'pixi.js';
+import { ArrowSprite, Direction, DIRECTIONS } from '../sprites/arrow';
+import { TargetArrowSprite } from '../sprites/targetArrow';
+import { TargetArrowContainer } from '../sprites/targetArrowContainer';
 import { keyboard } from '../utils/keyboard';
 
 const TARGET_POSITION = 60;
@@ -60,23 +62,20 @@ export class MainScene {
     this.container.addChild(comboLabel);
     this.updateCombo(0);
 
-    TargetArrowSprite.create();
-    const targetArrows = new Container();
+
+    const targetArrows = new TargetArrowContainer();
     targetArrows.name = 'targetArrows'
     this.container.addChild(targetArrows);
     for (const direction of DIRECTIONS) {
       // Target arrow sprite
-      const arrow = TargetArrowSprite.get(direction);
+      const arrow = targetArrows.getChildByDirection(direction) as TargetArrowSprite;
       arrow.anchor.set(0.5);
-      arrow.rotation = direction.rotation;
       arrow.position.set(getArrowPosition(direction, arrow.width, this.width), TARGET_POSITION);
-      arrow.name = direction.name;
-      targetArrows.addChild(arrow);
 
       // Key handler
       const key = keyboard(direction.key);
       key.press = () => {
-        const arrows = this.container.getChildByName('arrows') as Container;
+        const arrows : Container = this.container.getChildByName('arrows');
         const hitArrow = (arrows.children as ArrowSprite[]).find(
           (arrow) =>
             arrow.direction === direction &&
@@ -99,7 +98,7 @@ export class MainScene {
 
   updateCombo(newCombo: number) {
     if (newCombo === this.combo) return;
-    const comboLabel = this.container.getChildByName('combo') as Text;
+    const comboLabel : Text = this.container.getChildByName('combo');
     comboLabel.tint = newCombo === 0 ? 0xFF0000 : 0xFFFFFF;
     comboLabel.text = newCombo === 0 ? "MISS" : "Combo: " + newCombo.toString();
     this.combo = newCombo;
@@ -120,11 +119,11 @@ export class MainScene {
       1 + Math.floor(this.combo / COMBO_LEVEL_LENGTH));
     this.score += HIT_SCORE * this.speed * comboMultiplier;
 
-    const scoreLabel = this.container.getChildByName('score') as Text;
+    const scoreLabel : Text = this.container.getChildByName('score');
     scoreLabel.text = "Score: " + Math.round(this.score).toString();
 
-    const targetArrows = this.container.getChildByName('targetArrows') as Container;
-    const arrow = targetArrows.getChildByName(direction.name) as TargetArrowSprite;
+    const targetArrows : TargetArrowContainer = this.container.getChildByName('targetArrows');
+    const arrow = targetArrows.getChildByDirection(direction) as TargetArrowSprite;
     arrow.hit(TargetArrowSprite.DEFAULT_TIMEOUT / this.speed);
   }
 
@@ -134,12 +133,10 @@ export class MainScene {
     if (arrow !== undefined) {
       arrow.missed = true;
     }
-
-    TargetArrowSprite.clearHit();
   }
 
   update(delta: number) {
-    const arrows = this.container.getChildByName('arrows') as Container;
+    const arrows : Container = this.container.getChildByName('arrows');
     for (const arrow of arrows.children as ArrowSprite[]) {
       arrow.position.y -= delta * this.speed;
       if (arrow.position.y <= TARGET_POSITION - HIT_DISTANCE && !arrow.missed) {
@@ -163,7 +160,7 @@ export class MainScene {
   }
 
   spawnArrow(direction: Direction) {
-    const arrows = this.container.getChildByName('arrows') as Container;
+    const arrows : Container = this.container.getChildByName('arrows');
     const arrow = ArrowSprite.realFrom('images/arrow.png', direction);
     arrow.anchor.set(0.5);
     arrow.rotation = direction.rotation;
