@@ -30,9 +30,7 @@ export function beatsToSpawnTime(song: Song): Song {
 
   let speedIndex = 0;
   let changeSpeedTime = 0;
-  let speed = Math.pow(ACCELERATION, speedIndex);
-  let previousNoteTime = 0;
-  let targetTime = 0;
+  let speed = 1;
   for (const note of song.notes) {
     // Change note base count to note time in song
     note.time = beatsInterval * note.time + SPAWN_TO_TARGET / realBaseArrowSpeed;
@@ -41,11 +39,10 @@ export function beatsToSpawnTime(song: Song): Song {
     while (changeSpeedTime + ACCELERATION_TIME_DELTA * speed < note.time) {
       changeSpeedTime += ACCELERATION_TIME_DELTA * speed;
       speedIndex++;
-      speed = Math.pow(ACCELERATION, speedIndex);
+      speed *= ACCELERATION;
     }
-    note.time -= changeSpeedTime - ACCELERATION_TIME_DELTA * speedIndex + (note.time - changeSpeedTime) * (1 - 1 / speed);
+    note.time -= changeSpeedTime - speedIndex * ACCELERATION_TIME_DELTA + (note.time - changeSpeedTime) * (1 - 1 / speed);
 
-    targetTime = note.time;
     // Change not time in game to its spawn time
     const realSpeed = speed * realBaseArrowSpeed;
     if (note.time - SPAWN_TO_TARGET / realSpeed >= speedIndex * ACCELERATION_TIME_DELTA) {
@@ -53,7 +50,6 @@ export function beatsToSpawnTime(song: Song): Song {
     } else {
       note.time = note.time - SPAWN_TO_TARGET * ACCELERATION / realSpeed + (ACCELERATION - 1) * (note.time - speedIndex * ACCELERATION_TIME_DELTA);
     }
-    previousNoteTime = note.time;
   }
   song.notes = song.notes.sort((a, b) => a.time - b.time);
   return song;
