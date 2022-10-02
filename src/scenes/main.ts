@@ -1,13 +1,14 @@
-import { Container } from 'pixi.js';
+import { Container, Sprite } from 'pixi.js';
 import { Sound } from '@pixi/sound';
 import { ArrowSprite, Direction, DIRECTIONS, getDirection } from '../sprites/arrow';
 import { keyboard } from '../utils/keyboard';
+import { Song } from '../songs/song';
+import { autumnDance } from '../songs/autumn-dance';
 
 const TARGET_POSITION = 60;
 const HIT_DISTANCE = 25;
 const ACCELERATION = 1.1;
 const ACCELERATION_TIME_DELTA = 10;
-const BASE_ARROW_SPEED = 1.5;
 
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
   return appWidth / 2 + (direction.order - 1.5) * arrowWidth * 1.1;
@@ -16,18 +17,32 @@ function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: nu
 export class MainScene {
   container: Container;
   width: number;
-  spawnTimer: number;
+  songTimer: number;
   accelerationTimer: number;
   speed: number;
+  song: Song;
+  currentNoteIndex: number;
   music: Sound;
+  started: boolean;
 
-  constructor(width: number) {
+  constructor(width: number, height: number) {
     this.container = new Container();
     this.width = width;
-    this.spawnTimer = 0;
+    this.songTimer = 0;
     this.accelerationTimer = 0;
     this.speed = 1;
-    this.music = Sound.from('music/autumn_dance.mp3');
+    this.song = autumnDance;
+    this.currentNoteIndex = 0;
+    this.started = false;
+
+    const startButton = Sprite.from('images/start.png');
+    startButton.name = 'start-button';
+    startButton.anchor.set(0.5);
+    startButton.position.set(width / 2, height / 2);
+    startButton.interactive = true;
+    startButton.buttonMode = true;
+    startButton.on('pointerdown', this.start, this);
+    this.container.addChild(startButton);
 
     for (const direction of DIRECTIONS) {
       // Target arrow sprite
@@ -59,13 +74,28 @@ export class MainScene {
     const arrows = new Container();
     arrows.name = 'arrows';
     this.container.addChild(arrows);
-    this.music.play();
+  }
+
+  start() {
+    this.container.removeChild(this.container.getChildByName('start-button'));
+    this.music = Sound.from({
+      url: this.song.source,
+      preload: true,
+      loaded: () => {
+        this.music.volume = 0.08;
+        this.music.play();
+        this.started = true;
+      },
+    });
   }
 
   update(delta: number) {
+    if (!this.started) {
+      return;
+    }
+
     const arrows = this.container.getChildByName('arrows') as Container;
     for (const arrow of arrows.children as ArrowSprite[]) {
-      arrow.position.y -= delta * BASE_ARROW_SPEED * this.speed;
       if (arrow.position.y <= TARGET_POSITION - HIT_DISTANCE && !arrow.missed) {
         console.log('miss');
         arrow.missed = true;
@@ -73,15 +103,18 @@ export class MainScene {
     }
     arrows.removeChild(...(arrows.children as ArrowSprite[]).filter((arrow) => arrow.position.y < -arrow.height));
 
-    this.spawnTimer += delta / 60;
-    while (this.spawnTimer > 1 / this.speed) {
-      this.spawnArrow(DIRECTIONS[Math.floor(Math.random() * DIRECTIONS.length)]);
-      this.spawnTimer -= 1 / this.speed;
+    this.songTimer += delta / 60;
+    while (
+      this.currentNoteIndex < this.song.notes.length &&
+      this.songTimer > this.song.notes[this.currentNoteIndex].time
+    ) {
+      this.spawnArrow(getDirection(this.song.notes[this.currentNoteIndex].direction));
+      this.currentNoteIndex++;
     }
 
     this.accelerationTimer += delta / 60;
     while (this.accelerationTimer > ACCELERATION_TIME_DELTA) {
-      console.log("speeding up!");
+      console.log('speeding up!');
       this.speed *= ACCELERATION;
       this.music.speed = this.speed;
       this.accelerationTimer -= ACCELERATION_TIME_DELTA;
