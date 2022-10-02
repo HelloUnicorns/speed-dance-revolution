@@ -3,7 +3,7 @@
   "version": "0.0.1",
   "description": "Game submission by HelloUnicorns for the LD51 jam",
   "scripts": {
-    "build": "parcel build src/index.html --dist-dir dist",
+    "build": "parcel build src/index.html --dist-dir dist --public-url .",
     "format": "eslint src/**/*.ts --fix && prettier src/**/*.ts --write",
     "lint": "eslint src/**/*.ts && prettier src/**/*.ts --check",
     "start": "parcel src/index.html --port 8000",
