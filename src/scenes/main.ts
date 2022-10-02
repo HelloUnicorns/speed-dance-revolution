@@ -45,15 +45,6 @@ export class MainScene {
     this.score = 0;
     this.combo = 0;
 
-    const startButton = Sprite.from('images/start.png');
-    startButton.name = 'start-button';
-    startButton.anchor.set(0.5);
-    startButton.position.set(width / 2, height / 2);
-    startButton.interactive = true;
-    startButton.buttonMode = true;
-    startButton.on('pointerdown', this.start, this);
-    this.container.addChild(startButton);
-
     const scoreLabel = new Text('Score: 0', {
       fontFamily: 'Arial',
       fontSize: 32,
