@@ -1,52 +1,10 @@
-import { Song } from './song';
+import { beatsToSpawnTime, Song } from './song';
 
-const BASE_SPEED = 1.6;
-const REAL_BASE_SPEED = BASE_SPEED * 60;
-const ARROW_HEIGHT = 75;
-const APP_HEIGHT = 600;
-const TARGET_POSITION = 60;
-const SPAWN_TO_TARGET = APP_HEIGHT + ARROW_HEIGHT - TARGET_POSITION;
-const ACCELERATION_TIME_DELTA = 10;
-const ACCELERATION = 1.1;
-const BPM = 106 / 2;
-const BASE_INTERVAL = 60 / BPM;
-
-export function updateToSpawnTimes(song: Song): Song {
-  let speedIndex = 0;
-  let changeSpeedTime = 0;
-  let speed = Math.pow(ACCELERATION, speedIndex);
-  let previousNoteTime = 0;
-  let targetTime = 0;
-  for (const note of song.notes) {
-    // Change note base count to note time in song
-    note.time = BASE_INTERVAL * note.time + SPAWN_TO_TARGET / REAL_BASE_SPEED;
-
-    // Change note time in song to note time in game
-    while (changeSpeedTime + ACCELERATION_TIME_DELTA * speed < note.time) {
-      changeSpeedTime += ACCELERATION_TIME_DELTA * speed;
-      speedIndex++;
-      speed = Math.pow(ACCELERATION, speedIndex);
-    }
-    note.time -= changeSpeedTime - ACCELERATION_TIME_DELTA * speedIndex + (note.time - changeSpeedTime) * (1 - 1 / speed);
-
-    targetTime = note.time;
-    // Change not time in game to its spawn time
-    const realSpeed = speed * REAL_BASE_SPEED;
-    if (note.time - SPAWN_TO_TARGET / realSpeed >= speedIndex * ACCELERATION_TIME_DELTA) {
-      note.time -= SPAWN_TO_TARGET / realSpeed;
-    } else {
-      note.time = note.time - SPAWN_TO_TARGET * ACCELERATION / realSpeed + (ACCELERATION - 1) * (note.time - speedIndex * ACCELERATION_TIME_DELTA);
-    }
-    previousNoteTime = note.time;
-  }
-  song.notes = song.notes.sort((a, b) => a.time - b.time);
-  return song;
-}
-
-export const autumnDance: Song = updateToSpawnTimes({
+export const autumnDance: Song = beatsToSpawnTime({
   name: 'autumn-dance',
   source: 'music/autumn_dance.mp3',
-  baseSpeed: BASE_SPEED,
+  baseArrowSpeed: 1.6,
+  bpm: 106 / 2,
   notes: [
     { time: 0, direction: 'left' },
     { time: 1, direction: 'right' },
