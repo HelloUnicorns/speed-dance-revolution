@@ -180,7 +180,6 @@ export const autumnDance: Song = beatsToSpawnTime({
     { time: 90.125, direction: 'right' },
     { time: 91.5, direction: 'left' },
     { time: 92, direction: 'right' },
-    { time: 92.25, direction: 'down' }, // Variation
     { time: 92.75, direction: 'left' },
     { time: 94.75, direction: 'right'},
     { time: 95.25, direction: 'left'},
