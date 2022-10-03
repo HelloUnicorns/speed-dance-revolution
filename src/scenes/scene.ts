@@ -10,6 +10,4 @@ export abstract class Scene {
     this.width =  width;
     this.height = height;
   }
-
-  abstract update(delta: number) : void;
 }

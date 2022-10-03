@@ -5,7 +5,6 @@ import { TargetArrowSprite } from '../sprites/targetArrow';
 import { TargetArrowContainer } from '../sprites/targetArrowContainer';
 import { keyboard } from '../utils/keyboard';
 import { Song } from '../songs/song';
-import { autumnDance } from '../songs/autumnDance';
 import { ACCELERATION, ACCELERATION_TIME_DELTA, ARROW_HEIGHT, TARGET_POSITION } from '../consts';
 import { Scene } from './scene';
 
@@ -32,28 +31,20 @@ export class MainScene extends Scene {
   combo: number;
   pauseCallback: () => void;
 
-  constructor(width: number, height: number, pauseCallback: () => void) {
+  constructor(width: number, height: number, song: Song, pauseCallback: () => void) {
     super(width, height);
     this.pauseCallback = pauseCallback;
-
+    this.container = new Container();
+    this.width = width;
+    this.height = height;
     this.songTimer = 0;
     this.accelerationTimer = 0;
     this.speed = 1;
-    this.song = autumnDance;
+    this.song = song;
     this.currentNoteIndex = 0;
     this.running = false;
     this.score = 0;
     this.combo = 0;
-
-    const startButton = Sprite.from('images/start.png');
-    startButton.name = 'start-button';
-    startButton.scale.set(this.height / 400);
-    startButton.anchor.set(0.5);
-    startButton.position.set(width / 2, height / 2);
-    startButton.interactive = true;
-    startButton.buttonMode = true;
-    startButton.on('pointerdown', this.start, this);
-    this.container.addChild(startButton);
 
     const scoreLabel = new Text('Score: 0', {
       fontFamily: 'Arial',
@@ -133,7 +124,6 @@ export class MainScene extends Scene {
   }
 
   start() {
-    this.container.removeChild(this.container.getChildByName('start-button'));
     this.music = Sound.from({
       url: this.song.source,
       sprites: { song: { start: 0, end: this.song.end } },
