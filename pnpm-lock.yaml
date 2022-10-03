@@ -28,6 +28,7 @@ specifiers:
   '@typescript-eslint/parser': ^5.36.1
   eslint: ^8.23.0
   eslint-config-prettier: ^8.5.0
+  fontfaceobserver: ^2.3.0
   husky: ^8.0.1
   lint-staged: ^13.0.3
   parcel: ^2.7.0
@@ -57,6 +58,7 @@ dependencies:
   '@pixi/text-bitmap': 6.5.5_dp4mp4oyyotwgjrhmqj725iswm
   '@pixi/ticker': 6.5.5_3nrpitcn4gpryk2qhrelew2l4y
   '@pixi/utils': 6.5.5_rrcncfmabv2i2rzagfcy2t7vuu
+  fontfaceobserver: 2.3.0
   pixi.js: 6.5.5
 
 devDependencies:
@@ -2270,6 +2272,10 @@ packages:
   /flatted/3.2.7:
     resolution: {integrity: sha512-5nqDSxl8nn5BSNxyR3n4I6eDmbolI6WT+QqR547RwxQapgjQBmtktdP+HTBb/a/zLsbzERTONyUB5pefh5TtjQ==}
     dev: true
+
+  /fontfaceobserver/2.3.0:
+    resolution: {integrity: sha512-6FPvD/IVyT4ZlNe7Wcn5Fb/4ChigpucKYSvD6a+0iMoLn2inpo711eyIcKjmDtE5XNcgAkSH9uN/nfAeZzHEfg==}
+    dev: false
 
   /fs.realpath/1.0.0:
     resolution: {integrity: sha512-OO0pH2lK6a0hZnAdau5ItzHPI6pUlvI7jMVnxUQRtw4owF2wk8lOSabtGDCTP4Ggrg2MbGnWO9X8K1t4+fGMDw==}

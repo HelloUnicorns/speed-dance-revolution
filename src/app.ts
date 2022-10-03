@@ -12,6 +12,7 @@ import { OptionsScene } from './scenes/options';
 import { AppOptions } from './options';
 import { EndingScene } from './scenes/ending';
 import { Statistics } from './utils/statistics';
+import FontFaceObserver from 'fontfaceobserver';
 
 const app = new Application({
   width: Math.min(window.innerWidth - 2 * APP_MARGIN, 1280),
@@ -36,6 +37,11 @@ Assets.load([
   'images/checkbox-on.png',
   'images/button.png',
 ]).then(loadFirstScreen);
+
+new FontFaceObserver('Stick To It').load();
+new FontFaceObserver('Bubblegum').load();
+new FontFaceObserver('Party Confetti').load();
+new FontFaceObserver('Dunk Tank').load();
 
 const songs: Song[] = [autumnDance, funkyLove];
 
