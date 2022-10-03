@@ -57,6 +57,12 @@ function loadFirstScreen() {
 function onSongSelect(song: Song) {
   app.stop();
   app.stage.removeChild(selectSongScene.container);
+  if (options.trollModeEnabled) { 
+    app.view.style.position = 'absolute';
+    app.view.style.left = '50%';
+    app.view.style.top = '50%';
+    app.view.style.transform = 'translate(-50%, -50%)';
+  }
   pauseScene = new PauseScene(app.view.width, app.view.height, onResume, () => {
     app.stop();
     app.stage.removeChild(pauseScene.container);

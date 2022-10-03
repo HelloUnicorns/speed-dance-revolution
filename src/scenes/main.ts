@@ -274,6 +274,7 @@ export class MainScene extends Scene {
          *   otherwise this.music.resume() doesn't work in this.resume() */
         (await this.music.play('song')).on('end', () => {
           console.log('song ended');
+          while (this.rotateIndex % this.currentDirections.length != 0) this.rotate();
           this.endCallback(this.song.name, this.statistics);
         });
 
