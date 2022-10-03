@@ -38,7 +38,7 @@ Assets.load([
 
 const songs: Song[] = [autumnDance, funkyLove];
 
-const options: AppOptions = { volume: 0.08, touchPadEnabled: false };
+const options: AppOptions = { volume: 0.08, touchPadEnabled: false, trollModeEnabled: false };
 
 let selectSongScene: SelectSongScene;
 let optionsScene: OptionsScene;

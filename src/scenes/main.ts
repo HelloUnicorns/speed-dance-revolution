@@ -38,6 +38,12 @@ export class MainScene extends Scene {
   endCallback: (songName: string, statistics: Statistics) => void;
   statistics = new Statistics();
 
+  rotateIndex = 0;
+  trollMode = true;
+
+  originalDirections = ['up', 'right', 'down', 'left'];
+  currentDirections = ['up', 'right', 'down', 'left'];
+
   constructor(
     width: number,
     height: number,
@@ -120,7 +126,7 @@ export class MainScene extends Scene {
         const arrows: Container = this.container.getChildByName('arrows');
         const hitArrow = (arrows.children as ArrowSprite[]).find(
           (arrow) =>
-            arrow.direction === direction &&
+            arrow.direction.name === this.currentDirections[this.originalDirections.findIndex(dir => dir === direction.name)] &&
             arrow.position.y < TARGET_POSITION + HIT_DISTANCE &&
             arrow.position.y > TARGET_POSITION - HIT_DISTANCE,
         );
@@ -140,7 +146,7 @@ export class MainScene extends Scene {
         touchArrowLeft.rotation = direction.rotation;
         touchArrowLeft.tint = direction.name == 'left' || direction.name == 'right' ? 0xff00ff : 0x3377ff;
         touchArrowLeft.position.set(this.width * 0.85, this.height / 2);
-        switch (direction.name) {
+        switch (this.currentDirections[this.originalDirections.findIndex(dir => dir === direction.name)]) {
           case 'left':
             touchArrowLeft.position.x -= arrow.width;
             break;
@@ -181,7 +187,7 @@ export class MainScene extends Scene {
         touchArrowRight.rotation = direction.rotation;
         touchArrowRight.tint = direction.name == 'left' || direction.name == 'right' ? 0xff00ff : 0x3377ff;
         touchArrowRight.position.set(this.width * 0.15, this.height / 2);
-        switch (direction.name) {
+        switch (this.currentDirections[this.originalDirections.findIndex(dir => dir === direction.name)]) {
           case 'left':
             touchArrowRight.position.x -= arrow.width;
             break;
@@ -293,6 +299,18 @@ export class MainScene extends Scene {
     this.music.resume();
     this.running = true;
   }
+  
+  rotate() {
+    if (!this.trollMode) return;
+    const arrayRotate = (arr: Array<string>, reverse: boolean) => {
+      if (reverse) arr.unshift(arr.pop());
+      else arr.push(arr.shift());
+      return arr;
+    }
+    this.rotateIndex++;
+    document.body.style.transform = `rotate(${90 * this.rotateIndex}deg)`;
+    this.currentDirections = arrayRotate(this.currentDirections, true);
+  }
 
   updateCombo(newCombo: number) {
     if (newCombo === this.combo) return;
@@ -400,6 +418,7 @@ export class MainScene extends Scene {
     }
     while (this.accelerationTimer > ACCELERATION_TIME_DELTA) {
       speedUpCounter.text = SPEEDING_UP_MESSAGE;
+      this.rotate();
       this.speed *= ACCELERATION;
       this.music.speed = this.speed;
       this.accelerationTimer -= ACCELERATION_TIME_DELTA;

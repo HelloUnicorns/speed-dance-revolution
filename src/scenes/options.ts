@@ -67,5 +67,23 @@ export class OptionsScene extends Scene {
     touchPadLabel.anchor.set(0, 0.5);
     touchPadLabel.position.set(width * 0.312 + touchPadCheckbox.width / 3, height * 3 / 4);
     this.container.addChild(touchPadLabel);
+
+    // Troll mode
+    const trollModeCheckbox = createCheckbox(appOptions.trollModeEnabled, (trollModeEnabled: boolean) => {
+      appOptions.trollModeEnabled = trollModeEnabled;
+    });
+    trollModeCheckbox.anchor.set(1, 0.5);
+    trollModeCheckbox.height = trollModeCheckbox.width = height / 10;
+    trollModeCheckbox.position.set(width * 0.312, height * 7 / 8);
+    this.container.addChild(trollModeCheckbox);
+    const trollModeLabel = new Text('Enable TROLL MODE', {
+      fontFamily: 'Arial',
+      fontSize: this.height / 20,
+      fill: 0xffffff,
+      align: 'center',
+    });
+    trollModeLabel.anchor.set(0, 0.5);
+    trollModeLabel.position.set(width * 0.312 + trollModeLabel.width / 3, height * 7 / 8);
+    this.container.addChild(trollModeLabel);
   }
 }
