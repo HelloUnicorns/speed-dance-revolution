@@ -44,7 +44,7 @@ export class SelectSongScene extends Scene {
     turnOnVolumeLabel.position.set(width/2, MARGIN);
     this.container.addChild(turnOnVolumeLabel);
 
-    const touchPadInfo = new Text('From your phone? Enable the touch pad in the options!', {
+    const touchPadInfo = new Text('From your computer? Use the arrow keys\nFrom your phone? Enable the touch pad in the options!', {
       fontFamily: 'Arial',
       fontSize: this.height / 20,
       fill: 0xffffff,
