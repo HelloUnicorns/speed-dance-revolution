@@ -7,20 +7,20 @@ import { keyboard } from '../utils/keyboard';
 import { Song } from '../songs/song';
 import { autumnDance } from '../songs/autumnDance';
 import { ACCELERATION, ACCELERATION_TIME_DELTA, ARROW_HEIGHT, TARGET_POSITION } from '../consts';
+import { Scene } from './scene';
 
 const HIT_DISTANCE = 25;
 const HIT_SCORE = 10;
 const MAX_SCORE_COMBO_MULTIPLIER = 11;
 const COMBO_LEVEL_LENGTH = 10;
+const DEFAULT_VOLUME = 0.08;
+const SPEEDING_UP_MESSAGE = 'Speeding up!';
 
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
   return appWidth / 2 + (direction.order - 1.5) * arrowWidth * 1.1;
 }
 
-export class MainScene {
-  container: Container;
-  width: number;
-  height: number;
+export class MainScene extends Scene {
   songTimer: number;
   accelerationTimer: number;
   speed: number;
@@ -30,11 +30,12 @@ export class MainScene {
   running: boolean;
   score: number;
   combo: number;
+  pauseCallback: () => void;
 
-  constructor(width: number, height: number) {
-    this.container = new Container();
-    this.width = width;
-    this.height = height;
+  constructor(width: number, height: number, pauseCallback: () => void) {
+    super(width, height);
+    this.pauseCallback = pauseCallback;
+
     this.songTimer = 0;
     this.accelerationTimer = 0;
     this.speed = 1;
@@ -46,6 +47,7 @@ export class MainScene {
 
     const startButton = Sprite.from('images/start.png');
     startButton.name = 'start-button';
+    startButton.scale.set(this.height / 400);
     startButton.anchor.set(0.5);
     startButton.position.set(width / 2, height / 2);
     startButton.interactive = true;
@@ -55,7 +57,7 @@ export class MainScene {
 
     const scoreLabel = new Text('Score: 0', {
       fontFamily: 'Arial',
-      fontSize: 32,
+      fontSize: this.height / 15,
       fill: 0x00ff88,
       align: 'center',
     });
@@ -66,7 +68,7 @@ export class MainScene {
 
     const comboLabel = new Text('Combo: 0', {
       fontFamily: 'Arial',
-      fontSize: 32,
+      fontSize: this.height / 15,
       fill: 0xffffff,
     });
     comboLabel.anchor.set(0, 1);
@@ -74,6 +76,25 @@ export class MainScene {
     comboLabel.name = 'combo';
     this.container.addChild(comboLabel);
     this.updateCombo(0);
+
+    const pause = Sprite.from('images/pause.png');
+    pause.scale.set(0.25);
+    pause.anchor.set(1, 1);
+    pause.position.set(this.width, this.height);
+    pause.on('pointerdown', this.pause, this);
+    pause.interactive = true;
+    pause.buttonMode = true;
+    this.container.addChild(pause);
+
+    const speedUpCounter = new Text('10', {
+      fontFamily: 'Arial',
+      fontSize: 32,
+      fill: 0xffffff,
+    });
+    speedUpCounter.anchor.set(0);
+    speedUpCounter.position.set(0);
+    speedUpCounter.name = 'speed-up-counter';
+    this.container.addChild(speedUpCounter);
 
     const targetArrows = new TargetArrowContainer();
     targetArrows.name = 'targetArrows';
@@ -88,6 +109,7 @@ export class MainScene {
       // Key handler
       const key = keyboard(direction.key);
       key.press = () => {
+        if (!this.running) return;
         const arrows: Container = this.container.getChildByName('arrows');
         const hitArrow = (arrows.children as ArrowSprite[]).find(
           (arrow) =>
@@ -107,25 +129,31 @@ export class MainScene {
     const arrows = new Container();
     arrows.name = 'arrows';
     this.container.addChild(arrows);
+
   }
 
   start() {
     this.container.removeChild(this.container.getChildByName('start-button'));
     this.music = Sound.from({
       url: this.song.source,
+      sprites: { song: { start: 0, end: this.song.end } },
       preload: true,
       loaded: () => {
-        this.music.volume = 0.08;
-        this.music.play();
+        this.music.volume = DEFAULT_VOLUME;
+        this.music.play('song');
         this.running = true;
+      },
+      complete: () => {
+        // TODO: Add ending song scene (with the results) that afterwards leads to the song select scene.
+        console.log('done');
       },
     });
   }
 
   pause() {
-    if (!this.running) return;
     this.running = false;
     this.music.pause();
+    this.pauseCallback();
   }
 
   resume() {
@@ -174,7 +202,12 @@ export class MainScene {
 
   update(delta: number) {
     if (!this.running) return;
+    this.updateArrows(delta);
+    this.updateSpeedUpCounter(delta);
+    this.updateVolumeFadeOut(delta);
+  }
 
+  updateArrows(delta: number) {
     const arrows: Container = this.container.getChildByName('arrows');
     for (const arrow of arrows.children as ArrowSprite[]) {
       arrow.position.y -= delta * this.song.baseArrowSpeed * this.speed;
@@ -192,13 +225,31 @@ export class MainScene {
       this.spawnArrow(getDirection(this.song.notes[this.currentNoteIndex].direction));
       this.currentNoteIndex++;
     }
+  }
 
+  updateSpeedUpCounter(delta: number) {
     this.accelerationTimer += delta / 60;
+    const speedUpCounter: Text = this.container.getChildByName('speed-up-counter');
+    const newSpeedUpCount = 10 - Math.floor(this.accelerationTimer);
+    if (
+      newSpeedUpCount.toString() !== speedUpCounter.text &&
+      (speedUpCounter.text !== SPEEDING_UP_MESSAGE || newSpeedUpCount <= 8)
+    ) {
+      speedUpCounter.text = newSpeedUpCount.toString();
+    }
     while (this.accelerationTimer > ACCELERATION_TIME_DELTA) {
-      console.log('speeding up!');
+      speedUpCounter.text = SPEEDING_UP_MESSAGE;
       this.speed *= ACCELERATION;
       this.music.speed = this.speed;
       this.accelerationTimer -= ACCELERATION_TIME_DELTA;
+    }
+  }
+
+  updateVolumeFadeOut(delta: number) {
+    if (this.songTimer >= this.song.fadeOutStart && this.songTimer < this.song.fadeOutEnd) {
+      this.music.volume -= ((DEFAULT_VOLUME / (this.song.fadeOutEnd - this.song.fadeOutStart)) * delta) / 60;
+    } else if (this.songTimer >= this.song.fadeOutEnd) {
+      this.music.volume = 0;
     }
   }
 
@@ -209,7 +260,7 @@ export class MainScene {
     arrow.anchor.set(0.5);
     arrow.rotation = direction.rotation;
     arrow.tint = direction.color;
-    arrow.position.set(getArrowPosition(direction, arrow.width, this.width), 600 + arrow.height);
+    arrow.position.set(getArrowPosition(direction, arrow.width, this.width), this.height + arrow.height);
     arrows.addChild(arrow);
   }
 }
