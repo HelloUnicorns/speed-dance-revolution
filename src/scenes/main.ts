@@ -12,6 +12,7 @@ const HIT_DISTANCE = 25;
 const HIT_SCORE = 10;
 const MAX_SCORE_COMBO_MULTIPLIER = 11;
 const COMBO_LEVEL_LENGTH = 10;
+const DEFAULT_VOLUME = 0.08;
 const SPEEDING_UP_MESSAGE = 'Speeding up!';
 
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
@@ -124,11 +125,16 @@ export class MainScene {
     this.container.removeChild(this.container.getChildByName('start-button'));
     this.music = Sound.from({
       url: this.song.source,
+      sprites: { song: { start: 0, end: this.song.end } },
       preload: true,
       loaded: () => {
-        this.music.volume = 0.08;
-        this.music.play();
+        this.music.volume = DEFAULT_VOLUME;
+        this.music.play('song');
         this.started = true;
+      },
+      complete: () => {
+        // TODO: Add ending song scene (with the results) that afterwards leads to the song select scene.
+        console.log('done');
       },
     });
   }
@@ -173,7 +179,12 @@ export class MainScene {
 
   update(delta: number) {
     if (!this.started) return;
+    this.updateArrows(delta);
+    this.updateSpeedUpCounter(delta);
+    this.updateVolumeFadeOut(delta);
+  }
 
+  updateArrows(delta: number) {
     const arrows: Container = this.container.getChildByName('arrows');
     for (const arrow of arrows.children as ArrowSprite[]) {
       arrow.position.y -= delta * this.song.baseArrowSpeed * this.speed;
@@ -191,7 +202,9 @@ export class MainScene {
       this.spawnArrow(getDirection(this.song.notes[this.currentNoteIndex].direction));
       this.currentNoteIndex++;
     }
+  }
 
+  updateSpeedUpCounter(delta: number) {
     this.accelerationTimer += delta / 60;
     const speedUpCounter: Text = this.container.getChildByName('speed-up-counter');
     const newSpeedUpCount = 10 - Math.floor(this.accelerationTimer);
@@ -206,6 +219,14 @@ export class MainScene {
       this.speed *= ACCELERATION;
       this.music.speed = this.speed;
       this.accelerationTimer -= ACCELERATION_TIME_DELTA;
+    }
+  }
+
+  updateVolumeFadeOut(delta: number) {
+    if (this.songTimer >= this.song.fadeOutStart && this.songTimer < this.song.fadeOutEnd) {
+      this.music.volume -= ((DEFAULT_VOLUME / (this.song.fadeOutEnd - this.song.fadeOutStart)) * delta) / 60;
+    } else if (this.songTimer >= this.song.fadeOutEnd) {
+      this.music.volume = 0;
     }
   }
 
