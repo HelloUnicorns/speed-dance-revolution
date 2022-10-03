@@ -253,6 +253,7 @@ export class MainScene extends Scene {
     hitMessage.anchor.set(0.5, 0.5);
     hitMessage.position.set(width / 2, height / 2);
     hitMessage.style.fontSize = height / 8;
+    hitMessage.style.fontFamily = 'Party Confetti';
     this.container.addChild(hitMessage);
   }
 
