@@ -13,11 +13,12 @@ import { AppOptions } from './options';
 import { EndingScene } from './scenes/ending';
 import { Statistics } from './utils/statistics';
 import FontFaceObserver from 'fontfaceobserver';
+import { StartScene } from './scenes/start';
 
 const app = new Application({
   width: Math.min(window.innerWidth - 2 * APP_MARGIN, 1280),
   height: APP_HEIGHT,
-  autoStart: false,
+  autoStart: true,
 });
 Assets.load([
   'images/arrow.png',
@@ -36,7 +37,7 @@ Assets.load([
   'images/checkbox-off.png',
   'images/checkbox-on.png',
   'images/button.png',
-]).then(loadFirstScreen);
+]).then(loadStartScene);
 
 new FontFaceObserver('Stick To It').load();
 new FontFaceObserver('Bubblegum').load();
@@ -47,6 +48,7 @@ const songs: Song[] = [autumnDance, funkyLove];
 
 const options: AppOptions = { volume: 0.08, touchPadEnabled: false };
 
+let startScene: StartScene;
 let selectSongScene: SelectSongScene;
 let optionsScene: OptionsScene;
 let mainScene: MainScene;
@@ -54,18 +56,26 @@ let pauseScene: PauseScene;
 let endingScene: EndingScene;
 let mainSceneStarted = false;
 
+function loadStartScene() {
+  startScene = new StartScene(app.view.width, app.view.height);
+  app.stage.addChild(startScene.container);
+  setTimeout(loadFirstScreenFirstTime, 3000);
+}
+
+function loadFirstScreenFirstTime() {
+  app.stage.removeChild(startScene.container);
+  loadFirstScreen();
+}
+
 function loadFirstScreen() {
   selectSongScene = new SelectSongScene(app.view.width, app.view.height, songs, enterOptions, onSongSelect);
   optionsScene = new OptionsScene(app.view.width, app.view.height, options, exitOptions);
   app.stage.addChild(selectSongScene.container);
-  app.start();
 }
 
 function onSongSelect(song: Song) {
-  app.stop();
   app.stage.removeChild(selectSongScene.container);
   pauseScene = new PauseScene(app.view.width, app.view.height, onResume, () => {
-    app.stop();
     app.stage.removeChild(pauseScene.container);
     app.stage.removeChild(mainScene.container);
     loadFirstScreen();
@@ -118,7 +128,6 @@ function onEnd(songName: string, statistics: Statistics) {
   mainScene = undefined;
 
   endingScene = new EndingScene(app.view.width, app.view.height, songName, statistics, () => {
-    app.stop();
     app.stage.removeChild(endingScene.container);
     loadFirstScreen();
   });
