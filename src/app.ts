@@ -23,7 +23,7 @@ function onAssetsLoaded() {
 function onSongSelect(song: Song) {
   app.stop();
   app.stage.removeChild(selectSongScene.container);
-  mainScene = new MainScene(app.view.width, app.view.height);
+  mainScene = new MainScene(app.view.width, app.view.height, song);
   app.stage.addChild(mainScene.container);
   app.start();
 }

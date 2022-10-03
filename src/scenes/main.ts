@@ -5,7 +5,6 @@ import { TargetArrowSprite } from '../sprites/targetArrow';
 import { TargetArrowContainer } from '../sprites/targetArrowContainer';
 import { keyboard } from '../utils/keyboard';
 import { Song } from '../songs/song';
-import { autumnDance } from '../songs/autumnDance';
 import { ACCELERATION, ACCELERATION_TIME_DELTA, ARROW_HEIGHT, TARGET_POSITION } from '../consts';
 
 const HIT_DISTANCE = 25;
@@ -33,14 +32,14 @@ export class MainScene {
   score: number;
   combo: number;
 
-  constructor(width: number, height: number) {
+  constructor(width: number, height: number, song: Song) {
     this.container = new Container();
     this.width = width;
     this.height = height;
     this.songTimer = 0;
     this.accelerationTimer = 0;
     this.speed = 1;
-    this.song = autumnDance;
+    this.song = song;
     this.currentNoteIndex = 0;
     this.started = false;
     this.score = 0;
