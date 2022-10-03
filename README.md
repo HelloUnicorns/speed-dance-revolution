@@ -5,11 +5,11 @@
 **'Speed Dance Revolution'** is a singleplayer web game based on the popular game 'Dance Dance revolution'.<br>
 But there's a catch: Every 10 seconds the song gets much faster - try your best to keep up!
 
-This game was created as an entry for the Ludum Dare #51 Jam competition.  
+This game was created as an entry for the Ludum Dare #51 Jam competition. <br>
 The theme of the competition: 'Every 10 seconds'.
 
 ## Game Controls
-Desktop - you can use your arrow keys.
+Desktop - you can use your arrow keys. <br>
 Mobile - open the options menu and enable the touch pad. 
 
 ## Play Online
@@ -28,7 +28,7 @@ The server was tested on Windows & Linux.
         pnpm run build
         pnpm run start
 
-The server will start on port 3000 unless a PORT environment variable is specified.  
+The server will start on port 3000 unless a PORT environment variable is specified. <br>
 Play at http://localhost:8000/
 
 Have fun!  
