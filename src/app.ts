@@ -45,8 +45,6 @@ app.ticker.add((delta: number) => {
 document.addEventListener('visibilitychange', () => {
   if (document.hidden) {
     mainScene.pause();
-  } else {
-    mainScene.resume();
   }
 });
 
