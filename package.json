@@ -56,7 +56,6 @@
     "@pixi/text-bitmap": "6.5.5",
     "@pixi/ticker": "6.5.5",
     "@pixi/utils": "6.5.5",
-    "fontfaceobserver": "^2.3.0",
     "pixi.js": "^6.5.5"
   }
 }
