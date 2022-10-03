@@ -1,12 +1,12 @@
 import { Container, Sprite, Text, Texture } from 'pixi.js';
 import { Song } from '../songs/song';
 
-export function createSongSelectButton(song: Song, songSelectCallback: (song: Song) => void): Container {
+export function createSongSelectButton(song: Song, screenWidth: number, screenHeight: number, songSelectCallback: (song: Song) => void): Container {
   const container = new Container();
 
   const rectangle = Sprite.from(Texture.WHITE);
-  rectangle.width = 320;
-  rectangle.height = 80;
+  rectangle.width = screenHeight / 1.5;
+  rectangle.height = screenHeight / 5;
   rectangle.interactive = true;
   rectangle.buttonMode = true;
   rectangle.on('pointerdown', () => songSelectCallback(song));
@@ -14,7 +14,7 @@ export function createSongSelectButton(song: Song, songSelectCallback: (song: So
 
   const label = new Text(song.name, {
     fontFamily: 'Arial',
-    fontSize: 32,
+    fontSize: screenHeight / 15,
     fill: 0x000000,
     align: 'center',
   });

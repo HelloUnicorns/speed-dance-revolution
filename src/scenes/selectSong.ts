@@ -9,17 +9,17 @@ export class SelectSongScene extends Scene {
 
     const header = new Text('Select song:', {
       fontFamily: 'Arial',
-      fontSize: 48,
+      fontSize: this.height / 12,
       fill: 0xffffff,
       align: 'center',
     });
     header.anchor.set(0.5, 0);
-    header.position.set(width / 2, 60);
+    header.position.set(width / 2, height / 6);
     this.container.addChild(header);
 
     songs.forEach((song, index) => {
-      const button = createSongSelectButton(song, songSelectCallback);
-      button.position.set(width / 2 - button.width / 2, 200 - button.height / 2 + 120 * index);
+      const button = createSongSelectButton(song, width, height, songSelectCallback);
+      button.position.set(width / 2 - button.width / 2, height / 2.3 - button.height / 2 + height / 4 * index);
       this.container.addChild(button);
     });
   }
