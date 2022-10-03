@@ -7,6 +7,7 @@ import { keyboard } from '../utils/keyboard';
 import { Song } from '../songs/song';
 import { autumnDance } from '../songs/autumnDance';
 import { ACCELERATION, ACCELERATION_TIME_DELTA, ARROW_HEIGHT, TARGET_POSITION } from '../consts';
+import { Scene } from './scene';
 
 const HIT_DISTANCE = 25;
 const HIT_SCORE = 10;
@@ -17,30 +18,28 @@ function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: nu
   return appWidth / 2 + (direction.order - 1.5) * arrowWidth * 1.1;
 }
 
-export class MainScene {
-  container: Container;
-  width: number;
-  height: number;
+export class MainScene extends Scene {
   songTimer: number;
   accelerationTimer: number;
   speed: number;
   song: Song;
   currentNoteIndex: number;
   music: Sound;
-  started: boolean;
+  running: boolean;
   score: number;
   combo: number;
+  pauseCallback: () => void;
 
-  constructor(width: number, height: number) {
-    this.container = new Container();
-    this.width = width;
-    this.height = height;
+  constructor(width: number, height: number, pauseCallback: () => void) {
+    super(width, height);
+    this.pauseCallback = pauseCallback;
+
     this.songTimer = 0;
     this.accelerationTimer = 0;
     this.speed = 1;
     this.song = autumnDance;
     this.currentNoteIndex = 0;
-    this.started = false;
+    this.running = false;
     this.score = 0;
     this.combo = 0;
 
@@ -75,6 +74,16 @@ export class MainScene {
     this.container.addChild(comboLabel);
     this.updateCombo(0);
 
+    const pause = Sprite.from('images/pause.png');
+    pause.scale.set(0.25);
+    pause.anchor.set(1, 1);
+    pause.position.set(this.width, this.height);
+    console.log(pause.width);
+    pause.on('pointerdown', this.pause, this);
+    pause.interactive = true;
+    pause.buttonMode = true;
+    this.container.addChild(pause);
+
     const targetArrows = new TargetArrowContainer();
     targetArrows.name = 'targetArrows';
     this.container.addChild(targetArrows);
@@ -88,6 +97,7 @@ export class MainScene {
       // Key handler
       const key = keyboard(direction.key);
       key.press = () => {
+        if (!this.running) return;
         const arrows: Container = this.container.getChildByName('arrows');
         const hitArrow = (arrows.children as ArrowSprite[]).find(
           (arrow) =>
@@ -107,6 +117,7 @@ export class MainScene {
     const arrows = new Container();
     arrows.name = 'arrows';
     this.container.addChild(arrows);
+
   }
 
   start() {
@@ -117,9 +128,21 @@ export class MainScene {
       loaded: () => {
         this.music.volume = 0.08;
         this.music.play();
-        this.started = true;
+        this.running = true;
       },
     });
+  }
+
+  pause() {
+    this.running = false;
+    this.music.pause();
+    this.pauseCallback();
+  }
+
+  resume() {
+    if (this.running) return;
+    this.music.resume();
+    this.running = true;
   }
 
   updateCombo(newCombo: number) {
@@ -161,7 +184,7 @@ export class MainScene {
   }
 
   update(delta: number) {
-    if (!this.started) return;
+    if (!this.running) return;
 
     const arrows: Container = this.container.getChildByName('arrows');
     for (const arrow of arrows.children as ArrowSprite[]) {
