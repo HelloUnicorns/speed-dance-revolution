@@ -11,6 +11,7 @@ import { keyboard } from './utils/keyboard';
 import { OptionsScene } from './scenes/options';
 import { AppOptions } from './options';
 import { EndingScene } from './scenes/ending';
+import { Statistics } from './utils/statistics';
 
 const app = new Application({
   width: Math.min(window.innerWidth - 2 * APP_MARGIN, 1280),
@@ -91,14 +92,14 @@ function exitOptions() {
   app.stage.removeChild(optionsScene.container);
 }
 
-function onEnd(songName: string, score: number) {
+function onEnd(songName: string, statistics: Statistics) {
   mainScene.pause();
   app.stage.removeChild(mainScene.container);
   app.stage.removeChild(pauseScene.container);
   mainScene = undefined;
 
   endingScene = new EndingScene(app.view.width, app.view.height,
-    songName, score, () => {
+    songName, statistics, () => {
       app.stop();
       app.stage.removeChild(endingScene.container);
       loadFirstScreen();
