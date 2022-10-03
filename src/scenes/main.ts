@@ -179,7 +179,12 @@ export class MainScene {
 
   update(delta: number) {
     if (!this.started) return;
+    this.updateArrows(delta);
+    this.updateSpeedUpCounter(delta);
+    this.updateVolumeFadeOut(delta);
+  }
 
+  updateArrows(delta: number) {
     const arrows: Container = this.container.getChildByName('arrows');
     for (const arrow of arrows.children as ArrowSprite[]) {
       arrow.position.y -= delta * this.song.baseArrowSpeed * this.speed;
@@ -197,7 +202,9 @@ export class MainScene {
       this.spawnArrow(getDirection(this.song.notes[this.currentNoteIndex].direction));
       this.currentNoteIndex++;
     }
+  }
 
+  updateSpeedUpCounter(delta: number) {
     this.accelerationTimer += delta / 60;
     const speedUpCounter: Text = this.container.getChildByName('speed-up-counter');
     const newSpeedUpCount = 10 - Math.floor(this.accelerationTimer);
@@ -213,7 +220,9 @@ export class MainScene {
       this.music.speed = this.speed;
       this.accelerationTimer -= ACCELERATION_TIME_DELTA;
     }
+  }
 
+  updateVolumeFadeOut(delta: number) {
     if (this.songTimer >= this.song.fadeOutStart && this.songTimer < this.song.fadeOutEnd) {
       this.music.volume -= ((DEFAULT_VOLUME / (this.song.fadeOutEnd - this.song.fadeOutStart)) * delta) / 60;
     } else if (this.songTimer >= this.song.fadeOutEnd) {
