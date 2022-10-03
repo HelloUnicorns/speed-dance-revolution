@@ -1,10 +1,10 @@
 import { EventEmitter } from "@pixi/utils";
-import { Container, Sprite, Texture, Text } from "pixi.js";
+import { Container, Sprite, Text } from "pixi.js";
 
 export class Button extends Container {
-  constructor(width: number, height: number, fontSize: number, text: string, callback: EventEmitter.ListenerFn) {
+  constructor(width: number, height: number, fontSize: number, fontColor: number, text: string, callback: EventEmitter.ListenerFn) {
     super();
-    const rectangle = Sprite.from(Texture.WHITE);
+    const rectangle = Sprite.from('images/button.png');
     rectangle.width = width;
     rectangle.height = height;
     rectangle.interactive = true;
@@ -13,9 +13,9 @@ export class Button extends Container {
     this.addChild(rectangle);
   
     const label = new Text(text, {
-      fontFamily: 'Arial',
+      fontFamily: 'Dunk Tank',
       fontSize: fontSize,
-      fill: 0x000000,
+      fill: fontColor,
       align: 'center',
     });
     label.anchor.set(0.5);

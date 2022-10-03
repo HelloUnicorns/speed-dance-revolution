@@ -17,6 +17,7 @@ const HIT_SCORE = 10;
 const MAX_SCORE_COMBO_MULTIPLIER = 11;
 const COMBO_LEVEL_LENGTH = 10;
 const SPEEDING_UP_MESSAGE = 'Speeding up!';
+const MARGIN = 5;
 
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
   return appWidth / 2 + (direction.order - 1.5) * arrowWidth * 1.1;
@@ -53,49 +54,49 @@ export class MainScene extends Scene {
     this.options = options;
 
     const scoreLabel = new Text('Score: 0', {
-      fontFamily: 'Arial',
+      fontFamily: 'Stick To It',
       fontSize: this.height / 15,
       fill: 0x00ff88,
       align: 'center',
     });
     scoreLabel.anchor.set(0.5, 1);
-    scoreLabel.position.set(this.width / 2, this.height);
+    scoreLabel.position.set(this.width / 2, this.height - MARGIN);
     scoreLabel.name = 'score';
     this.container.addChild(scoreLabel);
 
     const comboLabel = new Text('Combo: 0', {
-      fontFamily: 'Arial',
+      fontFamily: 'Stick To It',
       fontSize: this.height / 15,
       fill: 0xffffff,
     });
     comboLabel.anchor.set(0, 1);
-    comboLabel.position.set(0, this.height);
+    comboLabel.position.set(MARGIN, this.height - MARGIN);
     comboLabel.name = 'combo';
     this.container.addChild(comboLabel);
     this.updateCombo(0);
 
     const pause = Sprite.from('images/pause.png');
-    pause.scale.set(0.25);
+    pause.scale.set(Math.min(height / 1440, 0.3));
     pause.anchor.set(1, 1);
-    pause.position.set(this.width, this.height);
+    pause.position.set(this.width - MARGIN, this.height - MARGIN);
     pause.on('pointerdown', this.pause, this);
     pause.interactive = true;
     pause.buttonMode = true;
     this.container.addChild(pause);
 
     const speedUpCounter = new Text('10', {
-      fontFamily: 'Arial',
+      fontFamily: 'Stick To It',
       fontSize: this.height / 15,
       fill: 0xffffff,
     });
     speedUpCounter.anchor.set(0);
-    speedUpCounter.position.set(0);
+    speedUpCounter.position.set(MARGIN);
     speedUpCounter.name = 'speed-up-counter';
     this.container.addChild(speedUpCounter);
 
     const loadingLabel = new Text('Loading...', {
-      fontFamily: 'Arial',
-      fontSize: this.height / 15,
+      fontFamily: 'Stick To It',
+      fontSize: this.height / 10,
       fill: 0xffffff,
     });
     loadingLabel.anchor.set(0.5);
@@ -252,6 +253,7 @@ export class MainScene extends Scene {
     hitMessage.anchor.set(0.5, 0.5);
     hitMessage.position.set(width / 2, height / 2);
     hitMessage.style.fontSize = height / 8;
+    hitMessage.style.fontFamily = 'Party Confetti';
     this.container.addChild(hitMessage);
   }
 

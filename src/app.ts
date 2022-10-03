@@ -12,6 +12,7 @@ import { OptionsScene } from './scenes/options';
 import { AppOptions } from './options';
 import { EndingScene } from './scenes/ending';
 import { Statistics } from './utils/statistics';
+import FontFaceObserver from 'fontfaceobserver';
 
 const app = new Application({
   width: Math.min(window.innerWidth - 2 * APP_MARGIN, 1280),
@@ -34,7 +35,13 @@ Assets.load([
   'images/stick-right.png',
   'images/checkbox-off.png',
   'images/checkbox-on.png',
+  'images/button.png',
 ]).then(loadFirstScreen);
+
+new FontFaceObserver('Stick To It').load();
+new FontFaceObserver('Bubblegum').load();
+new FontFaceObserver('Party Confetti').load();
+new FontFaceObserver('Dunk Tank').load();
 
 const songs: Song[] = [autumnDance, funkyLove];
 
@@ -110,11 +117,10 @@ function onEnd(songName: string, statistics: Statistics) {
   app.stage.removeChild(pauseScene.container);
   mainScene = undefined;
 
-  endingScene = new EndingScene(app.view.width, app.view.height,
-    songName, statistics, () => {
-      app.stop();
-      app.stage.removeChild(endingScene.container);
-      loadFirstScreen();
+  endingScene = new EndingScene(app.view.width, app.view.height, songName, statistics, () => {
+    app.stop();
+    app.stage.removeChild(endingScene.container);
+    loadFirstScreen();
   });
   app.stage.addChild(endingScene.container);
 }

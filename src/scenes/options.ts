@@ -6,6 +6,8 @@ import { createCheckbox } from '../sprites/checkbox';
 import { createSlider } from '../sprites/slider';
 import { Scene } from './scene';
 
+const MARGIN = 5;
+
 export class OptionsScene extends Scene {
   constructor(width: number, height: number, appOptions: AppOptions, exitOptionsCallback: () => void) {
     super(width, height);
@@ -18,16 +20,16 @@ export class OptionsScene extends Scene {
     this.container.addChild(graphics);
 
     const options = Sprite.from('images/options.png');
-    options.scale.set(0.25);
+    options.scale.set(Math.min(height / 1440, 0.3));
     options.anchor.set(1, 1);
-    options.position.set(this.width, this.height);
+    options.position.set(this.width - MARGIN, this.height - MARGIN);
     options.on('pointerdown', exitOptionsCallback);
     options.interactive = true;
     options.buttonMode = true;
     this.container.addChild(options);
 
     const header = new Text('Options:', {
-      fontFamily: 'Arial',
+      fontFamily: 'Stick To It',
       fontSize: this.height / 12,
       fill: 0xffffff,
       align: 'center',
@@ -42,7 +44,7 @@ export class OptionsScene extends Scene {
     volumeSlider.position.set(width / 2, height / 2 + volumeSlider.height / 4);
     this.container.addChild(volumeSlider);
     const volumeLabel = new Text('Volume:', {
-      fontFamily: 'Arial',
+      fontFamily: 'Party Confetti',
       fontSize: this.height / 18,
       fill: 0xffffff,
       align: 'center',
@@ -56,16 +58,16 @@ export class OptionsScene extends Scene {
     });
     touchPadCheckbox.anchor.set(1, 0.5);
     touchPadCheckbox.height = touchPadCheckbox.width = height / 10;
-    touchPadCheckbox.position.set(width * 0.312, height * 3 / 4);
+    touchPadCheckbox.position.set(width * 0.35, height * 3 / 4);
     this.container.addChild(touchPadCheckbox);
     const touchPadLabel = new Text('Enable touch pad (for mobile)', {
-      fontFamily: 'Arial',
+      fontFamily: 'Party Confetti',
       fontSize: this.height / 20,
       fill: 0xffffff,
       align: 'center',
     });
     touchPadLabel.anchor.set(0, 0.5);
-    touchPadLabel.position.set(width * 0.312 + touchPadCheckbox.width / 3, height * 3 / 4);
+    touchPadLabel.position.set(width * 0.35 + touchPadCheckbox.width / 3, height * 3 / 4);
     this.container.addChild(touchPadLabel);
   }
 }
