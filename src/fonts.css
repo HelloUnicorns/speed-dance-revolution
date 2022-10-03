@@ -4,6 +4,11 @@
 }
 
 @font-face {
-  font-family: "Confetti Stream";
+  font-family: "Bubblegum";
   src: url("fonts/Bubblegum2PersonalUseRegular-3z8nX.ttf") format("truetype")
+}
+
+@font-face {
+  font-family: "Party Confetti";
+  src: url("fonts/PartyConfettiRegular-eZOn3.ttf") format("truetype")
 }

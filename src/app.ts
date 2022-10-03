@@ -8,7 +8,6 @@ import { SelectSongScene } from './scenes/selectSong';
 import { Song } from './songs/song';
 import { PauseScene } from './scenes/pause';
 import { keyboard } from './utils/keyboard';
-import FontFaceObserver from 'fontfaceobserver';
 import { OptionsScene } from './scenes/options';
 import { AppOptions } from './options';
 import { EndingScene } from './scenes/ending';
@@ -38,9 +37,6 @@ Assets.load([
 ]).then(loadFirstScreen);
 
 const songs: Song[] = [autumnDance, funkyLove];
-
-new FontFaceObserver('Stick To It').load();
-new FontFaceObserver('Confetti Stream').load();
 
 const options: AppOptions = { volume: 0.08, touchPadEnabled: false };
 

@@ -10,7 +10,7 @@ export class SelectSongScene extends Scene {
     super(width, height);
 
     const header = new Text('Select song', {
-      fontFamily: 'Confetti Stream',
+      fontFamily: 'Bubblegum',
       fontSize: this.height / 8,
       fill: 0xff3399,
       align: 'center',
@@ -38,7 +38,7 @@ export class SelectSongScene extends Scene {
     this.container.addChild(options);
 
     const turnOnVolumeLabel = new Text('Turn on your volume!', {
-      fontFamily: 'Arial',
+      fontFamily: 'Party Confetti',
       fontSize: this.height / 20,
       fill: 0xffffff,
       align: 'center',
@@ -48,7 +48,7 @@ export class SelectSongScene extends Scene {
     this.container.addChild(turnOnVolumeLabel);
 
     const touchPadInfo = new Text('From your computer? Use the arrow keys\nFrom your phone? Enable the touch pad in the options!', {
-      fontFamily: 'Arial',
+      fontFamily: 'Party Confetti',
       fontSize: this.height / 20,
       fill: 0xffffff,
       align: 'center',
