@@ -71,10 +71,4 @@ export class PauseScene extends Scene {
     if (!this.isPaused()) return;
     this.updateCountdown();
   }
-
-  // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  update(_delta: number) {
-    /* Do nothing */
-    return;
-  }
 }
