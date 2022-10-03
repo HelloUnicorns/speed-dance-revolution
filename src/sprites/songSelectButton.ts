@@ -9,9 +9,7 @@ export function createSongSelectButton(song: Song, songSelectCallback: (song: So
   rectangle.height = 80;
   rectangle.interactive = true;
   rectangle.buttonMode = true;
-  rectangle.on('pointerdown', () => {
-    songSelectCallback(song);
-  });
+  rectangle.on('pointerdown', () => songSelectCallback(song));
   container.addChild(rectangle);
 
   const label = new Text(song.name, {

@@ -4,8 +4,6 @@ import { createSongSelectButton } from '../sprites/songSelectButton';
 import { Scene } from './scene';
 
 export class SelectSongScene extends Scene {
-  container: Container;
-
   constructor(width: number, height: number, songs: Song[], songSelectCallback: (song: Song) => void) {
     super(width, height);
 
