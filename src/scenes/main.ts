@@ -210,7 +210,7 @@ export class MainScene extends Scene {
             this.miss();
             return;
           }
-          this.hit(hitArrow.direction);
+          this.hit(hitArrow.direction, Math.abs(hitArrow.position.y - TARGET_POSITION));
           arrows.removeChild(hitArrow);
         });
         this.container.addChild(touchArrowRight);
