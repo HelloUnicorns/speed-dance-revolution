@@ -56,7 +56,12 @@ function loadFirstScreen() {
 function onSongSelect(song: Song) {
   app.stop();
   app.stage.removeChild(selectSongScene.container);
-  pauseScene = new PauseScene(app.view.width, app.view.height, onResume);
+  pauseScene = new PauseScene(app.view.width, app.view.height, onResume, () => {
+    app.stop();
+    app.stage.removeChild(pauseScene.container);
+    app.stage.removeChild(mainScene.container);
+    loadFirstScreen();
+  });
   mainScene = new MainScene(app.view.width, app.view.height, song, options, onPause, onEnd);
   mainSceneStarted = false;
   app.stage.addChild(mainScene.container);
