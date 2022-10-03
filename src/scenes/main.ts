@@ -12,7 +12,7 @@ const HIT_DISTANCE = 25;
 const HIT_SCORE = 10;
 const MAX_SCORE_COMBO_MULTIPLIER = 11;
 const COMBO_LEVEL_LENGTH = 10;
-const VOLUME = 0.08;
+const DEFAULT_VOLUME = 0.08;
 const SPEEDING_UP_MESSAGE = 'Speeding up!';
 
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
@@ -128,7 +128,7 @@ export class MainScene {
       sprites: { song: { start: 0, end: this.song.end } },
       preload: true,
       loaded: () => {
-        this.music.volume = VOLUME;
+        this.music.volume = DEFAULT_VOLUME;
         this.music.play('song');
         this.started = true;
       },
@@ -214,7 +214,7 @@ export class MainScene {
     }
 
     if (this.songTimer >= this.song.fadeOutStart && this.songTimer < this.song.fadeOutEnd) {
-      this.music.volume -= ((VOLUME / (this.song.fadeOutEnd - this.song.fadeOutStart)) * delta) / 60;
+      this.music.volume -= ((DEFAULT_VOLUME / (this.song.fadeOutEnd - this.song.fadeOutStart)) * delta) / 60;
     } else if (this.songTimer >= this.song.fadeOutEnd) {
       this.music.volume = 0;
     }
