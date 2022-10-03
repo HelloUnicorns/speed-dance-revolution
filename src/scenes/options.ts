@@ -56,7 +56,7 @@ export class OptionsScene extends Scene {
     });
     touchPadCheckbox.anchor.set(1, 0.5);
     touchPadCheckbox.height = touchPadCheckbox.width = height / 10;
-    touchPadCheckbox.position.set(width * 0.312, height * 3 / 4);
+    touchPadCheckbox.position.set(width * 0.35, height * 3 / 4);
     this.container.addChild(touchPadCheckbox);
     const touchPadLabel = new Text('Enable touch pad (for mobile)', {
       fontFamily: 'Party Confetti',
@@ -65,7 +65,7 @@ export class OptionsScene extends Scene {
       align: 'center',
     });
     touchPadLabel.anchor.set(0, 0.5);
-    touchPadLabel.position.set(width * 0.312 + touchPadCheckbox.width / 3, height * 3 / 4);
+    touchPadLabel.position.set(width * 0.35 + touchPadCheckbox.width / 3, height * 3 / 4);
     this.container.addChild(touchPadLabel);
   }
 }
