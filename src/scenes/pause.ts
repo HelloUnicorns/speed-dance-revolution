@@ -1,5 +1,6 @@
 import { Sound } from "@pixi/sound";
 import { Graphics, Sprite, Texture } from "pixi.js";
+import { Button } from "../sprites/button";
 import { Scene } from "./scene";
 
 export class PauseScene extends Scene {
@@ -18,7 +19,7 @@ export class PauseScene extends Scene {
   timer: ReturnType<typeof setTimeout>;
   sound: Sound = Sound.from('music/boing.mp3');
 
-  constructor(width: number, height: number, resumeCallback: () => void) {
+  constructor(width: number, height: number, resumeCallback: () => void, replayCallback: () => void) {
     super(width, height);
 
     this.resumeCallback = resumeCallback;
@@ -38,6 +39,11 @@ export class PauseScene extends Scene {
 
     this.container.addChild(graphics);
     this.container.addChild(this.sprite);
+
+    const replayButton = new Button(
+      this.height / 1.5, this.height / 5, this.height / 15, 'Back to main menu', replayCallback);
+    replayButton.position.set(width / 2 - replayButton.width / 2, height  - replayButton.height - 20);
+    this.container.addChild(replayButton);
   }
 
   updateCountdown() {
