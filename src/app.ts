@@ -26,6 +26,11 @@ Assets.load([
   'images/resume2.png',
   'images/resume3.png',
   'images/options.png',
+  'images/stick-miss.png',
+  'images/stick-left.png',
+  'images/stick-down.png',
+  'images/stick-up.png',
+  'images/stick-right.png',
   'images/checkbox-off.png',
   'images/checkbox-on.png',
 ]).then(loadFirstScreen);
