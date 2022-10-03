@@ -6,6 +6,8 @@ import { createCheckbox } from '../sprites/checkbox';
 import { createSlider } from '../sprites/slider';
 import { Scene } from './scene';
 
+const MARGIN = 5;
+
 export class OptionsScene extends Scene {
   constructor(width: number, height: number, appOptions: AppOptions, exitOptionsCallback: () => void) {
     super(width, height);
@@ -18,9 +20,9 @@ export class OptionsScene extends Scene {
     this.container.addChild(graphics);
 
     const options = Sprite.from('images/options.png');
-    options.scale.set(0.25);
+    options.scale.set(Math.min(height / 1440, 0.3));
     options.anchor.set(1, 1);
-    options.position.set(this.width, this.height);
+    options.position.set(this.width - MARGIN, this.height - MARGIN);
     options.on('pointerdown', exitOptionsCallback);
     options.interactive = true;
     options.buttonMode = true;

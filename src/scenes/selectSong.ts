@@ -29,7 +29,7 @@ export class SelectSongScene extends Scene {
     });
 
     const options = Sprite.from('images/options.png');
-    options.scale.set(0.25);
+    options.scale.set(Math.min(height / 1440, 0.3));
     options.anchor.set(1, 1);
     options.position.set(this.width - MARGIN, this.height - MARGIN);
     options.on('pointerdown', enterOptionsCallback);
