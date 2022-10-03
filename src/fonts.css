@@ -12,3 +12,8 @@
   font-family: "Party Confetti";
   src: url("fonts/PartyConfettiRegular-eZOn3.ttf") format("truetype")
 }
+
+@font-face {
+  font-family: "Dunk Tank";
+  src: url("fonts/Kbdunktank-A5ag.ttf") format("truetype")
+}

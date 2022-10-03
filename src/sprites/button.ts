@@ -13,7 +13,7 @@ export class Button extends Container {
     this.addChild(rectangle);
   
     const label = new Text(text, {
-      fontFamily: 'Party Confetti',
+      fontFamily: 'Dunk Tank',
       fontSize: fontSize,
       fill: 0x000000,
       align: 'center',
