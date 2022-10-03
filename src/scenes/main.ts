@@ -26,6 +26,7 @@ export class MainScene extends Scene {
   song: Song;
   currentNoteIndex: number;
   music: Sound;
+  paused: boolean;
   running: boolean;
   score: number;
   combo: number;
@@ -42,6 +43,7 @@ export class MainScene extends Scene {
     this.speed = 1;
     this.song = song;
     this.currentNoteIndex = 0;
+    this.paused = false;
     this.running = false;
     this.score = 0;
     this.combo = 0;
@@ -130,8 +132,15 @@ export class MainScene extends Scene {
       preload: true,
       loaded: () => {
         this.music.volume = DEFAULT_VOLUME;
+
+        /* Starting the song even if it gets immediately paused,
+         *   otherwise this.music.resume() doesn't work in this.resume() */
         this.music.play('song');
-        this.running = true;
+        if (!this.paused) {
+          this.running = true;
+        } else {
+          this.music.pause();
+        }
       },
       complete: () => {
         // TODO: Add ending song scene (with the results) that afterwards leads to the song select scene.
@@ -142,12 +151,14 @@ export class MainScene extends Scene {
 
   pause() {
     this.running = false;
+    this.paused = true;
     this.music.pause();
     this.pauseCallback();
   }
 
   resume() {
     if (this.running) return;
+    this.paused = false;
     this.music.resume();
     this.running = true;
   }
