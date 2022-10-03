@@ -48,7 +48,7 @@ export class MainScene extends Scene {
 
     const scoreLabel = new Text('Score: 0', {
       fontFamily: 'Arial',
-      fontSize: 32,
+      fontSize: this.height / 15,
       fill: 0x00ff88,
       align: 'center',
     });
@@ -59,7 +59,7 @@ export class MainScene extends Scene {
 
     const comboLabel = new Text('Combo: 0', {
       fontFamily: 'Arial',
-      fontSize: 32,
+      fontSize: this.height / 15,
       fill: 0xffffff,
     });
     comboLabel.anchor.set(0, 1);
@@ -124,7 +124,6 @@ export class MainScene extends Scene {
   }
 
   start() {
-    this.container.removeChild(this.container.getChildByName('start-button'));
     this.music = Sound.from({
       url: this.song.source,
       sprites: { song: { start: 0, end: this.song.end } },
@@ -251,7 +250,7 @@ export class MainScene extends Scene {
     arrow.anchor.set(0.5);
     arrow.rotation = direction.rotation;
     arrow.tint = direction.color;
-    arrow.position.set(getArrowPosition(direction, arrow.width, this.width), 600 + arrow.height);
+    arrow.position.set(getArrowPosition(direction, arrow.width, this.width), this.height + arrow.height);
     arrows.addChild(arrow);
   }
 }

@@ -9,10 +9,17 @@ import { Song } from './songs/song';
 import { PauseScene } from './scenes/pause';
 import { keyboard } from './utils/keyboard';
 
-const app = new Application({ width: 800, height: APP_HEIGHT, autoStart: false });
-Assets.load(['images/arrow.png', 'images/arrow_hit.png', 'images/start.png',
-  'images/pause.png', 'images/play.png', 'images/resume1.png',
-  'images/resume2.png', 'images/resume3.png', 'music/boing.mp3']).then(onAssetsLoaded);
+const app = new Application({ width: Math.min(window.innerWidth, 1280), height: APP_HEIGHT, autoStart: false });
+Assets.load([
+  'images/arrow.png',
+  'images/arrow_hit.png',
+  'images/pause.png',
+  'images/play.png',
+  'images/resume1.png',
+  'images/resume2.png',
+  'images/resume3.png',
+  'music/boing.mp3',
+]).then(onAssetsLoaded);
 
 const songs: Song[] = [autumnDance, funkyLove];
 
