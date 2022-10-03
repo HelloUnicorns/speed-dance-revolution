@@ -74,10 +74,8 @@ function loadFirstScreen() {
 }
 
 function onSongSelect(song: Song) {
-  app.stop();
   app.stage.removeChild(selectSongScene.container);
   pauseScene = new PauseScene(app.view.width, app.view.height, onResume, () => {
-    app.stop();
     app.stage.removeChild(pauseScene.container);
     app.stage.removeChild(mainScene.container);
     loadFirstScreen();
@@ -130,7 +128,6 @@ function onEnd(songName: string, statistics: Statistics) {
   mainScene = undefined;
 
   endingScene = new EndingScene(app.view.width, app.view.height, songName, statistics, () => {
-    app.stop();
     app.stage.removeChild(endingScene.container);
     loadFirstScreen();
   });
