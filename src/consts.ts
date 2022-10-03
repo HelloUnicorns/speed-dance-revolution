@@ -1,5 +1,5 @@
 // App constants
-export const APP_HEIGHT = 270;
+export const APP_HEIGHT = Math.min(window.innerHeight - 20, 720);
 
 // Song acceleration constants
 export const ACCELERATION_TIME_DELTA = 10;
