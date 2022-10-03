@@ -1,4 +1,4 @@
-import { Container, Sprite, Text } from 'pixi.js';
+import { Container, Sprite, Text, Texture } from 'pixi.js';
 import { Sound } from '@pixi/sound';
 import { ArrowSprite, Direction, DIRECTIONS, getDirection } from '../sprites/arrow';
 import { TargetArrowSprite } from '../sprites/targetArrow';
@@ -131,6 +131,116 @@ export class MainScene extends Scene {
         this.hit(hitArrow.direction, Math.abs(hitArrow.position.y - TARGET_POSITION));
         arrows.removeChild(hitArrow);
       };
+
+      if (options.touchPadEnabled) {
+        // Touch handler right side
+        const touchArrowLeft = ArrowSprite.realFrom('images/arrow.png', direction);
+        touchArrowLeft.scale.set(ARROW_HEIGHT / touchArrowLeft.height);
+        touchArrowLeft.anchor.set(0.5);
+        touchArrowLeft.rotation = direction.rotation;
+        touchArrowLeft.tint = direction.name == 'left' || direction.name == 'right' ? 0xff00ff : 0x3377ff;
+        touchArrowLeft.position.set(this.width * 0.85, this.height / 2);
+        switch (direction.name) {
+          case 'left':
+            touchArrowLeft.position.x -= arrow.width;
+            break;
+          case 'right':
+            touchArrowLeft.position.x += arrow.width;
+            break;
+          case 'up':
+            touchArrowLeft.position.y -= arrow.height;
+            break;
+          case 'down':
+            touchArrowLeft.position.y += arrow.height;
+            break;
+        }
+        touchArrowLeft.interactive = true;
+        touchArrowLeft.buttonMode = true;
+        touchArrowLeft.on('pointerdown', () => {
+          if (!this.running) return;
+          const arrows: Container = this.container.getChildByName('arrows');
+          const hitArrow = (arrows.children as ArrowSprite[]).find(
+            (arrow) =>
+              arrow.direction === direction &&
+              arrow.position.y < TARGET_POSITION + HIT_DISTANCE &&
+              arrow.position.y > TARGET_POSITION - HIT_DISTANCE,
+          );
+          if (hitArrow === undefined) {
+            this.miss();
+            return;
+          }
+          this.hit(hitArrow.direction, Math.abs(hitArrow.position.y - TARGET_POSITION));
+          arrows.removeChild(hitArrow);
+        });
+        this.container.addChild(touchArrowLeft);
+
+        // Touch handler left side
+        const touchArrowRight = ArrowSprite.realFrom('images/arrow.png', direction);
+        touchArrowRight.scale.set(ARROW_HEIGHT / touchArrowRight.height);
+        touchArrowRight.anchor.set(0.5);
+        touchArrowRight.rotation = direction.rotation;
+        touchArrowRight.tint = direction.name == 'left' || direction.name == 'right' ? 0xff00ff : 0x3377ff;
+        touchArrowRight.position.set(this.width * 0.15, this.height / 2);
+        switch (direction.name) {
+          case 'left':
+            touchArrowRight.position.x -= arrow.width;
+            break;
+          case 'right':
+            touchArrowRight.position.x += arrow.width;
+            break;
+          case 'up':
+            touchArrowRight.position.y -= arrow.height;
+            break;
+          case 'down':
+            touchArrowRight.position.y += arrow.height;
+            break;
+        }
+        touchArrowRight.interactive = true;
+        touchArrowRight.buttonMode = true;
+        touchArrowRight.on('pointerdown', () => {
+          if (!this.running) return;
+          const arrows: Container = this.container.getChildByName('arrows');
+          const hitArrow = (arrows.children as ArrowSprite[]).find(
+            (arrow) =>
+              arrow.direction === direction &&
+              arrow.position.y < TARGET_POSITION + HIT_DISTANCE &&
+              arrow.position.y > TARGET_POSITION - HIT_DISTANCE,
+          );
+          if (hitArrow === undefined) {
+            this.miss();
+            return;
+          }
+          this.hit(hitArrow.direction);
+          arrows.removeChild(hitArrow);
+        });
+        this.container.addChild(touchArrowRight);
+      }
+    }
+
+    if (!options.touchPadEnabled) {
+      const stickLeft = Sprite.from('images/stick-miss.png');
+      stickLeft.scale.set(
+        Math.min(
+          Math.min(stickLeft.width, this.width / 3) / stickLeft.width,
+          Math.min(stickLeft.height, this.height) / stickLeft.height,
+        ),
+      );
+      stickLeft.anchor.set(0.5);
+      stickLeft.position.set(this.width / 6, this.height / 2);
+      stickLeft.name = 'stick-left';
+      this.container.addChild(stickLeft);
+
+      const stickRight = Sprite.from('images/stick-miss.png');
+      stickRight.scale.set(
+        Math.min(
+          Math.min(stickRight.width, this.width / 3) / stickRight.width,
+          Math.min(stickRight.height, this.height) / stickRight.height,
+        ),
+      );
+      stickRight.anchor.set(0.5);
+      stickRight.position.set((this.width * 5) / 6, this.height / 2);
+      stickRight.name = 'stick-right';
+      this.container.addChild(stickRight);
     }
 
     const arrows = new Container();
@@ -221,6 +331,16 @@ export class MainScene extends Scene {
     const targetArrows: TargetArrowContainer = this.container.getChildByName('targetArrows');
     const arrow = targetArrows.getChildByDirection(direction) as TargetArrowSprite;
     arrow.hit(TargetArrowSprite.DEFAULT_TIMEOUT / this.speed);
+
+    if (!this.options.touchPadEnabled) {
+      console.log(`stick-${direction.name}.png`);
+      (this.container.getChildByName('stick-left') as Sprite).texture = Texture.from(
+        `images/stick-${direction.name}.png`,
+      );
+      (this.container.getChildByName('stick-right') as Sprite).texture = Texture.from(
+        `images/stick-${direction.name}.png`,
+      );
+    }
   }
 
   miss(arrow?: ArrowSprite) {
@@ -233,6 +353,10 @@ export class MainScene extends Scene {
     this.updateCombo(0);
     if (arrow !== undefined) {
       arrow.missed = true;
+    }
+    if (!this.options.touchPadEnabled) {
+      (this.container.getChildByName('stick-left') as Sprite).texture = Texture.from(`images/stick-miss.png`);
+      (this.container.getChildByName('stick-right') as Sprite).texture = Texture.from(`images/stick-miss.png`);
     }
   }
 

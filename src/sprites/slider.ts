@@ -9,9 +9,9 @@ export function createSlider(
   const container = new Container();
 
   const bar = Sprite.from(Texture.WHITE);
-  bar.tint = 0x0000ff;
+  bar.tint = 0x3333ff;
   bar.width = screenWidth / 2;
-  bar.height = screenHeight / 10;
+  bar.height = screenHeight / 15;
   bar.anchor.set(0.5);
   container.addChild(bar);
 
