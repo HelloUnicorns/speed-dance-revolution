@@ -46,6 +46,7 @@ export class MainScene {
 
     const startButton = Sprite.from('images/start.png');
     startButton.name = 'start-button';
+    startButton.scale.set(this.height / 400);
     startButton.anchor.set(0.5);
     startButton.position.set(width / 2, height / 2);
     startButton.interactive = true;
@@ -55,7 +56,7 @@ export class MainScene {
 
     const scoreLabel = new Text('Score: 0', {
       fontFamily: 'Arial',
-      fontSize: 32,
+      fontSize: this.height / 15,
       fill: 0x00ff88,
       align: 'center',
     });
@@ -66,7 +67,7 @@ export class MainScene {
 
     const comboLabel = new Text('Combo: 0', {
       fontFamily: 'Arial',
-      fontSize: 32,
+      fontSize: this.height / 15,
       fill: 0xffffff,
     });
     comboLabel.anchor.set(0, 1);
