@@ -92,6 +92,7 @@ export class EndingScene extends Scene {
       this.height / 1.5,
       this.height / 5,
       this.height / 15,
+      0,
       'Start a new game',
       replayCallback,
     );
