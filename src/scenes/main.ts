@@ -14,7 +14,6 @@ const HIT_SCORE = 10;
 const MAX_SCORE_COMBO_MULTIPLIER = 11;
 const COMBO_LEVEL_LENGTH = 10;
 const SPEEDING_UP_MESSAGE = 'Speeding up!';
-const MARGIN = 5;
 
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
   return appWidth / 2 + (direction.order - 1.5) * arrowWidth * 1.1;
@@ -131,14 +130,26 @@ export class MainScene extends Scene {
     }
 
     const stickLeft = Sprite.from('images/stick-miss.png');
-    stickLeft.anchor.set(0, 0.5);
-    stickLeft.position.set(MARGIN, this.height / 2);
+    stickLeft.scale.set(
+      Math.min(
+        Math.min(stickLeft.width, this.width / 3) / stickLeft.width,
+        Math.min(stickLeft.height, this.height) / stickLeft.height,
+      ),
+    );
+    stickLeft.anchor.set(0.5);
+    stickLeft.position.set(this.width / 6, this.height / 2);
     stickLeft.name = 'stick-left';
     this.container.addChild(stickLeft);
 
     const stickRight = Sprite.from('images/stick-miss.png');
-    stickRight.anchor.set(1, 0.5);
-    stickRight.position.set(this.width - MARGIN, this.height / 2);
+    stickRight.scale.set(
+      Math.min(
+        Math.min(stickRight.width, this.width / 3) / stickRight.width,
+        Math.min(stickRight.height, this.height) / stickRight.height,
+      ),
+    );
+    stickRight.anchor.set(0.5);
+    stickRight.position.set(this.width * 5 / 6, this.height / 2);
     stickRight.name = 'stick-right';
     this.container.addChild(stickRight);
 
@@ -216,8 +227,12 @@ export class MainScene extends Scene {
     arrow.hit(TargetArrowSprite.DEFAULT_TIMEOUT / this.speed);
 
     console.log(`stick-${direction.name}.png`);
-    (this.container.getChildByName('stick-left') as Sprite).texture = Texture.from(`images/stick-${direction.name}.png`);
-    (this.container.getChildByName('stick-right') as Sprite).texture = Texture.from(`images/stick-${direction.name}.png`);
+    (this.container.getChildByName('stick-left') as Sprite).texture = Texture.from(
+      `images/stick-${direction.name}.png`,
+    );
+    (this.container.getChildByName('stick-right') as Sprite).texture = Texture.from(
+      `images/stick-${direction.name}.png`,
+    );
   }
 
   miss(arrow?: ArrowSprite) {
