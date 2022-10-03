@@ -31,6 +31,7 @@ export class PauseScene extends Scene {
     graphics.alpha = 0.5;
     graphics.drawRect(0, 0, width, height);
 
+    this.sprite.scale.set(Math.min(height / 360, 1));
     this.sprite.anchor.set(0.5, 0.5);
     this.sprite.position.set(this.width / 2, this.height / 2);
     this.sprite.interactive = true;

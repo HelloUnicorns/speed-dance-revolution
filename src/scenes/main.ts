@@ -76,7 +76,7 @@ export class MainScene extends Scene {
     this.updateCombo(0);
 
     const pause = Sprite.from('images/pause.png');
-    pause.scale.set(0.25);
+    pause.scale.set(Math.min(height / 1440, 0.3));
     pause.anchor.set(1, 1);
     pause.position.set(this.width - MARGIN, this.height - MARGIN);
     pause.on('pointerdown', this.pause, this);

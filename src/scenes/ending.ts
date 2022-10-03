@@ -14,7 +14,7 @@ export class EndingScene extends Scene {
       align: 'center',
     });
     header.anchor.set(0.5, 0);
-    header.position.set(width / 2, 60);
+    header.position.set(width / 2, height / 10);
     header.name = 'songName';
     this.container.addChild(header);
 
