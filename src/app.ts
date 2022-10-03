@@ -13,9 +13,8 @@ Assets.load(['images/arrow.png', 'images/arrow_hit.png', 'images/start.png',
 let mainScene: MainScene;
 let pauseScene: PauseScene;
 function onAssetsLoaded() {
-  pauseScene = new PauseScene(app.view.width, app.view.height);
+  pauseScene = new PauseScene(app.view.width, app.view.height, onResume);
   mainScene = new MainScene(app.view.width, app.view.height, onPause);
-  mainScene.container.name = 'main';
   app.stage.addChild(mainScene.container);
 
   keyboard(' ').press = () => {
@@ -31,7 +30,7 @@ function onAssetsLoaded() {
 
 function onPause() {
   app.stage.addChild(pauseScene.container);
-  pauseScene.pause(onResume);
+  pauseScene.pause();
 }
 
 function onResume() {

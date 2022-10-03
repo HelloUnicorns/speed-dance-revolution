@@ -18,8 +18,10 @@ export class PauseScene extends Scene {
   timer: ReturnType<typeof setTimeout>;
   sound: Sound = Sound.from('music/boing.mp3');
 
-  constructor(width: number, height: number) {
+  constructor(width: number, height: number, resumeCallback: () => void) {
     super(width, height);
+
+    this.resumeCallback = resumeCallback;
 
     const graphics = new Graphics();
     graphics.name = 'mask';
@@ -38,7 +40,7 @@ export class PauseScene extends Scene {
     this.container.addChild(this.sprite);
   }
 
-  updateTexture() {
+  updateCountdown() {
     if (this.textureIndex >= this.resumeTextures.length) {
         this.container.alpha = 0;
         this.timer = undefined;
@@ -49,15 +51,14 @@ export class PauseScene extends Scene {
     this.sprite.texture = this.resumeTextures[this.textureIndex];
     this.sound.play();
     this.textureIndex++;
-    this.timer = setTimeout(() => this.updateTexture(), 1000);
+    this.timer = setTimeout(() => this.updateCountdown(), 1000);
   }
 
-  pause(resumeCallback: () => void) {
+  pause() {
     if (this.timer !== undefined) {
         clearTimeout(this.timer);
     }
     this.sprite.texture = this.playTexture;
-    this.resumeCallback = resumeCallback;
     this.container.alpha = 1;
     this.textureIndex = 0;
   }
@@ -68,7 +69,7 @@ export class PauseScene extends Scene {
 
   resume() {
     if (!this.isPaused()) return;
-    this.updateTexture();
+    this.updateCountdown();
   }
 
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
