@@ -6,14 +6,19 @@ import { autumnDance } from './songs/autumnDance';
 import { funkyLove } from './songs/funkyLove';
 import { SelectSongScene } from './scenes/selectSong';
 import { Song } from './songs/song';
+import { PauseScene } from './scenes/pause';
+import { keyboard } from './utils/keyboard';
 
 const app = new Application({ width: 800, height: APP_HEIGHT, autoStart: false });
-Assets.load(['images/arrow.png', 'images/arrow_hit.png']).then(onAssetsLoaded);
+Assets.load(['images/arrow.png', 'images/arrow_hit.png', 'images/start.png',
+  'images/pause.png', 'images/play.png', 'images/resume1.png',
+  'images/resume2.png', 'images/resume3.png', 'music/boing.mp3']).then(onAssetsLoaded);
 
 const songs: Song[] = [autumnDance, funkyLove];
 
 let selectSongScene: SelectSongScene;
 let mainScene: MainScene;
+let pauseScene: PauseScene;
 function onAssetsLoaded() {
   selectSongScene = new SelectSongScene(app.view.width, app.view.height, songs, onSongSelect);
   app.stage.addChild(selectSongScene.container);
@@ -23,9 +28,29 @@ function onAssetsLoaded() {
 function onSongSelect(song: Song) {
   app.stop();
   app.stage.removeChild(selectSongScene.container);
-  mainScene = new MainScene(app.view.width, app.view.height, song);
+  pauseScene = new PauseScene(app.view.width, app.view.height, onResume);
+  mainScene = new MainScene(app.view.width, app.view.height, song, onPause);
   app.stage.addChild(mainScene.container);
+
+  keyboard(' ').press = () => {
+    if (pauseScene.isPaused()) {
+      pauseScene.resume();
+    } else {
+      mainScene.pause();
+    }
+  };
+
   app.start();
+}
+
+function onPause() {
+  app.stage.addChild(pauseScene.container);
+  pauseScene.pause();
+}
+
+function onResume() {
+  app.stage.removeChild(pauseScene.container);
+  mainScene.resume();
 }
 
 let mainSceneStarted = false;
