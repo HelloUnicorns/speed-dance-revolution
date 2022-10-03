@@ -133,6 +133,7 @@ export class MainScene {
         this.started = true;
       },
       complete: () => {
+        // TODO: Add ending song scene (with the results) that afterwards leads to the song select scene.
         console.log('done');
       },
     });
