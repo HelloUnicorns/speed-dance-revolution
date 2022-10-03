@@ -1,18 +1,21 @@
-import { Container, Sprite, Text } from 'pixi.js';
+import { Container, Sprite, Text, Texture } from 'pixi.js';
 import { Sound } from '@pixi/sound';
 import { ArrowSprite, Direction, DIRECTIONS, getDirection } from '../sprites/arrow';
 import { TargetArrowSprite } from '../sprites/targetArrow';
 import { TargetArrowContainer } from '../sprites/targetArrowContainer';
 import { keyboard } from '../utils/keyboard';
 import { Song } from '../songs/song';
-import { ACCELERATION, ACCELERATION_TIME_DELTA, ARROW_HEIGHT, TARGET_POSITION } from '../consts';
+import { ACCELERATION, ACCELERATION_TIME_DELTA, ARROW_HEIGHT, HIT_DISTANCE, HIT_MESSAGES, TARGET_POSITION } from '../consts';
+import { getMissMessage } from '../utils/messages';
 import { Scene } from './scene';
+import { AppOptions } from '../options';
+import { HitMessage } from '../sprites/hitMessage';
+import { Statistics } from '../utils/statistics';
 
-const HIT_DISTANCE = 25;
+
 const HIT_SCORE = 10;
 const MAX_SCORE_COMBO_MULTIPLIER = 11;
 const COMBO_LEVEL_LENGTH = 10;
-const DEFAULT_VOLUME = 0.08;
 const SPEEDING_UP_MESSAGE = 'Speeding up!';
 const MARGIN = 5;
 
@@ -21,33 +24,34 @@ function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: nu
 }
 
 export class MainScene extends Scene {
-  songTimer: number;
-  accelerationTimer: number;
-  speed: number;
+  songTimer = 0;
+  accelerationTimer = 0;
+  speed = 1;
   song: Song;
-  currentNoteIndex: number;
+  currentNoteIndex = 0;
   music: Sound;
-  paused: boolean;
-  running: boolean;
-  score: number;
-  combo: number;
+  paused = false;
+  running = false;
+  score = 0;
+  combo = 0;
+  options: AppOptions;
   pauseCallback: () => void;
+  endCallback: (songName: string, statistics: Statistics) => void;
+  statistics = new Statistics();
 
-  constructor(width: number, height: number, song: Song, pauseCallback: () => void) {
+  constructor(
+    width: number,
+    height: number,
+    song: Song,
+    options: AppOptions,
+    pauseCallback: () => void,
+    endCallback: (songName: string, statistics: Statistics) => void,
+  ) {
     super(width, height);
     this.pauseCallback = pauseCallback;
-    this.container = new Container();
-    this.width = width;
-    this.height = height;
-    this.songTimer = 0;
-    this.accelerationTimer = 0;
-    this.speed = 1;
+    this.endCallback = endCallback;
     this.song = song;
-    this.currentNoteIndex = 0;
-    this.paused = false;
-    this.running = false;
-    this.score = 0;
-    this.combo = 0;
+    this.options = options;
 
     const scoreLabel = new Text('Score: 0', {
       fontFamily: 'Stick To It',
@@ -125,15 +129,131 @@ export class MainScene extends Scene {
           this.miss();
           return;
         }
-        this.hit(hitArrow.direction);
+        this.hit(hitArrow.direction, Math.abs(hitArrow.position.y - TARGET_POSITION));
         arrows.removeChild(hitArrow);
       };
+
+      if (options.touchPadEnabled) {
+        // Touch handler right side
+        const touchArrowLeft = ArrowSprite.realFrom('images/arrow.png', direction);
+        touchArrowLeft.scale.set(ARROW_HEIGHT / touchArrowLeft.height);
+        touchArrowLeft.anchor.set(0.5);
+        touchArrowLeft.rotation = direction.rotation;
+        touchArrowLeft.tint = direction.name == 'left' || direction.name == 'right' ? 0xff00ff : 0x3377ff;
+        touchArrowLeft.position.set(this.width * 0.85, this.height / 2);
+        switch (direction.name) {
+          case 'left':
+            touchArrowLeft.position.x -= arrow.width;
+            break;
+          case 'right':
+            touchArrowLeft.position.x += arrow.width;
+            break;
+          case 'up':
+            touchArrowLeft.position.y -= arrow.height;
+            break;
+          case 'down':
+            touchArrowLeft.position.y += arrow.height;
+            break;
+        }
+        touchArrowLeft.interactive = true;
+        touchArrowLeft.buttonMode = true;
+        touchArrowLeft.on('pointerdown', () => {
+          if (!this.running) return;
+          const arrows: Container = this.container.getChildByName('arrows');
+          const hitArrow = (arrows.children as ArrowSprite[]).find(
+            (arrow) =>
+              arrow.direction === direction &&
+              arrow.position.y < TARGET_POSITION + HIT_DISTANCE &&
+              arrow.position.y > TARGET_POSITION - HIT_DISTANCE,
+          );
+          if (hitArrow === undefined) {
+            this.miss();
+            return;
+          }
+          this.hit(hitArrow.direction, Math.abs(hitArrow.position.y - TARGET_POSITION));
+          arrows.removeChild(hitArrow);
+        });
+        this.container.addChild(touchArrowLeft);
+
+        // Touch handler left side
+        const touchArrowRight = ArrowSprite.realFrom('images/arrow.png', direction);
+        touchArrowRight.scale.set(ARROW_HEIGHT / touchArrowRight.height);
+        touchArrowRight.anchor.set(0.5);
+        touchArrowRight.rotation = direction.rotation;
+        touchArrowRight.tint = direction.name == 'left' || direction.name == 'right' ? 0xff00ff : 0x3377ff;
+        touchArrowRight.position.set(this.width * 0.15, this.height / 2);
+        switch (direction.name) {
+          case 'left':
+            touchArrowRight.position.x -= arrow.width;
+            break;
+          case 'right':
+            touchArrowRight.position.x += arrow.width;
+            break;
+          case 'up':
+            touchArrowRight.position.y -= arrow.height;
+            break;
+          case 'down':
+            touchArrowRight.position.y += arrow.height;
+            break;
+        }
+        touchArrowRight.interactive = true;
+        touchArrowRight.buttonMode = true;
+        touchArrowRight.on('pointerdown', () => {
+          if (!this.running) return;
+          const arrows: Container = this.container.getChildByName('arrows');
+          const hitArrow = (arrows.children as ArrowSprite[]).find(
+            (arrow) =>
+              arrow.direction === direction &&
+              arrow.position.y < TARGET_POSITION + HIT_DISTANCE &&
+              arrow.position.y > TARGET_POSITION - HIT_DISTANCE,
+          );
+          if (hitArrow === undefined) {
+            this.miss();
+            return;
+          }
+          this.hit(hitArrow.direction, Math.abs(hitArrow.position.y - TARGET_POSITION));
+          arrows.removeChild(hitArrow);
+        });
+        this.container.addChild(touchArrowRight);
+      }
+    }
+
+    if (!options.touchPadEnabled) {
+      const stickLeft = Sprite.from('images/stick-miss.png');
+      stickLeft.scale.set(
+        Math.min(
+          Math.min(stickLeft.width, this.width / 3) / stickLeft.width,
+          Math.min(stickLeft.height, this.height) / stickLeft.height,
+        ),
+      );
+      stickLeft.anchor.set(0.5);
+      stickLeft.position.set(this.width / 6, this.height / 2);
+      stickLeft.name = 'stick-left';
+      this.container.addChild(stickLeft);
+
+      const stickRight = Sprite.from('images/stick-miss.png');
+      stickRight.scale.set(
+        Math.min(
+          Math.min(stickRight.width, this.width / 3) / stickRight.width,
+          Math.min(stickRight.height, this.height) / stickRight.height,
+        ),
+      );
+      stickRight.anchor.set(0.5);
+      stickRight.position.set((this.width * 5) / 6, this.height / 2);
+      stickRight.name = 'stick-right';
+      this.container.addChild(stickRight);
     }
 
     const arrows = new Container();
     arrows.name = 'arrows';
     this.container.addChild(arrows);
 
+    const hitMessage = new HitMessage();
+    hitMessage.name = 'hit';
+    hitMessage.anchor.set(0.5, 0.5);
+    hitMessage.position.set(width / 2, height / 2);
+    hitMessage.style.fontSize = height / 8;
+    this.container.addChild(hitMessage);
   }
 
   start() {
@@ -141,22 +261,22 @@ export class MainScene extends Scene {
       url: this.song.source,
       sprites: { song: { start: 0, end: this.song.end } },
       preload: true,
-      loaded: () => {
+      loaded: async () => {
         this.container.removeChild(this.container.getChildByName('loading'));
-        this.music.volume = DEFAULT_VOLUME;
+        this.music.volume = this.options.volume;
 
         /* Starting the song even if it gets immediately paused,
          *   otherwise this.music.resume() doesn't work in this.resume() */
-        this.music.play('song');
+        (await this.music.play('song')).on('end', () => {
+          console.log('song ended');
+          this.endCallback(this.song.name, this.statistics);
+        });
+
         if (!this.paused) {
           this.running = true;
         } else {
           this.music.pause();
         }
-      },
-      complete: () => {
-        // TODO: Add ending song scene (with the results) that afterwards leads to the song select scene.
-        console.log('done');
       },
     });
   }
@@ -181,10 +301,18 @@ export class MainScene extends Scene {
     comboLabel.tint = newCombo === 0 ? 0xff0000 : 0xffffff;
     comboLabel.text = newCombo === 0 ? 'MISS' : 'Combo: ' + newCombo.toString();
     this.combo = newCombo;
+    this.statistics.maxCombo = Math.max(this.statistics.maxCombo, this.combo);
   }
 
-  hit(direction: Direction) {
+  hit(direction: Direction, hitDelta: number) {
     console.log('hit');
+
+    const hitMessageData = hitDelta === HIT_DISTANCE 
+      ? HIT_MESSAGES[HIT_MESSAGES.length - 1]
+      : HIT_MESSAGES[Math.floor(HIT_MESSAGES.length * (1 - hitDelta / HIT_DISTANCE))];
+      (this.container.getChildByName('hit') as HitMessage).setMessage(
+        hitMessageData[0], hitMessageData[1], HitMessage.DEFAULT_TIMEOUT / this.speed);
+    this.statistics.noteIncrease(hitMessageData[0]);
 
     this.updateCombo(this.combo + 1);
     /* The score is multiplied by:
@@ -196,6 +324,7 @@ export class MainScene extends Scene {
      */
     const comboMultiplier = Math.min(MAX_SCORE_COMBO_MULTIPLIER, 1 + Math.floor(this.combo / COMBO_LEVEL_LENGTH));
     this.score += HIT_SCORE * this.speed * comboMultiplier;
+    this.statistics.score = this.score;
 
     const scoreLabel: Text = this.container.getChildByName('score');
     scoreLabel.text = 'Score: ' + Math.round(this.score).toString();
@@ -203,13 +332,32 @@ export class MainScene extends Scene {
     const targetArrows: TargetArrowContainer = this.container.getChildByName('targetArrows');
     const arrow = targetArrows.getChildByDirection(direction) as TargetArrowSprite;
     arrow.hit(TargetArrowSprite.DEFAULT_TIMEOUT / this.speed);
+
+    if (!this.options.touchPadEnabled) {
+      console.log(`stick-${direction.name}.png`);
+      (this.container.getChildByName('stick-left') as Sprite).texture = Texture.from(
+        `images/stick-${direction.name}.png`,
+      );
+      (this.container.getChildByName('stick-right') as Sprite).texture = Texture.from(
+        `images/stick-${direction.name}.png`,
+      );
+    }
   }
 
   miss(arrow?: ArrowSprite) {
     console.log('miss');
+    const missMessage = getMissMessage();
+    this.statistics.noteIncrease(missMessage);
+    (this.container.getChildByName('hit') as HitMessage).setMessage(
+      missMessage, 0xFF0000, HitMessage.DEFAULT_TIMEOUT / this.speed);
+
     this.updateCombo(0);
     if (arrow !== undefined) {
       arrow.missed = true;
+    }
+    if (!this.options.touchPadEnabled) {
+      (this.container.getChildByName('stick-left') as Sprite).texture = Texture.from(`images/stick-miss.png`);
+      (this.container.getChildByName('stick-right') as Sprite).texture = Texture.from(`images/stick-miss.png`);
     }
   }
 
@@ -218,6 +366,7 @@ export class MainScene extends Scene {
     this.updateArrows(delta);
     this.updateSpeedUpCounter(delta);
     this.updateVolumeFadeOut(delta);
+    (this.container.getChildByName('hit') as HitMessage).update(delta);
   }
 
   updateArrows(delta: number) {
@@ -260,7 +409,7 @@ export class MainScene extends Scene {
 
   updateVolumeFadeOut(delta: number) {
     if (this.songTimer >= this.song.fadeOutStart && this.songTimer < this.song.fadeOutEnd) {
-      this.music.volume -= ((DEFAULT_VOLUME / (this.song.fadeOutEnd - this.song.fadeOutStart)) * delta) / 60;
+      this.music.volume -= ((this.options.volume / (this.song.fadeOutEnd - this.song.fadeOutStart)) * delta) / 60;
     } else if (this.songTimer >= this.song.fadeOutEnd) {
       this.music.volume = 0;
     }
