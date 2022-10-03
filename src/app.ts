@@ -8,6 +8,8 @@ import { SelectSongScene } from './scenes/selectSong';
 import { Song } from './songs/song';
 import { PauseScene } from './scenes/pause';
 import { keyboard } from './utils/keyboard';
+import { OptionsScene } from './scenes/options';
+import { AppOptions } from './options';
 import { EndingScene } from './scenes/ending';
 
 const app = new Application({
@@ -23,19 +25,23 @@ Assets.load([
   'images/resume1.png',
   'images/resume2.png',
   'images/resume3.png',
-  'music/boing.mp3',
+  'images/options.png',
 ]).then(loadFirstScreen);
 
 const songs: Song[] = [autumnDance, funkyLove];
 
+const options: AppOptions = { volume: 0.08 };
+
 let selectSongScene: SelectSongScene;
+let optionsScene: OptionsScene;
 let mainScene: MainScene;
 let pauseScene: PauseScene;
 let endingScene: EndingScene;
 let mainSceneStarted = false;
 
 function loadFirstScreen() {
-  selectSongScene = new SelectSongScene(app.view.width, app.view.height, songs, onSongSelect);
+  selectSongScene = new SelectSongScene(app.view.width, app.view.height, songs, enterOptions, onSongSelect);
+  optionsScene = new OptionsScene(app.view.width, app.view.height, options, exitOptions);
   app.stage.addChild(selectSongScene.container);
   app.start();
 }
@@ -44,7 +50,7 @@ function onSongSelect(song: Song) {
   app.stop();
   app.stage.removeChild(selectSongScene.container);
   pauseScene = new PauseScene(app.view.width, app.view.height, onResume);
-  mainScene = new MainScene(app.view.width, app.view.height, song, onPause, onEnd);
+  mainScene = new MainScene(app.view.width, app.view.height, song, options, onPause, onEnd);
   mainSceneStarted = false;
   app.stage.addChild(mainScene.container);
 
@@ -73,6 +79,16 @@ function onPause() {
 function onResume() {
   app.stage.removeChild(pauseScene.container);
   mainScene.resume();
+}
+
+function enterOptions() {
+  app.stage.addChild(optionsScene.container);
+  app.stage.removeChild(selectSongScene.container);
+}
+
+function exitOptions() {
+  app.stage.addChild(selectSongScene.container);
+  app.stage.removeChild(optionsScene.container);
 }
 
 function onEnd(songName: string, score: number) {
