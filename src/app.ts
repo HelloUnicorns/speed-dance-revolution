@@ -8,6 +8,7 @@ import { SelectSongScene } from './scenes/selectSong';
 import { Song } from './songs/song';
 import { PauseScene } from './scenes/pause';
 import { keyboard } from './utils/keyboard';
+import FontFaceObserver from 'fontfaceobserver';
 
 const app = new Application({
   width: Math.min(window.innerWidth - 2 * APP_MARGIN, 1280),
@@ -26,6 +27,9 @@ Assets.load([
 ]).then(onAssetsLoaded);
 
 const songs: Song[] = [autumnDance, funkyLove];
+
+new FontFaceObserver('Stick To It').load();
+new FontFaceObserver('Confetti Stream').load();
 
 let selectSongScene: SelectSongScene;
 let mainScene: MainScene;
@@ -80,6 +84,5 @@ app.ticker.add((delta: number) => {
     mainScene.update(delta);
   }
 });
-
 
 export default app;

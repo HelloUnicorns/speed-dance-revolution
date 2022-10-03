@@ -7,10 +7,10 @@ export class SelectSongScene extends Scene {
   constructor(width: number, height: number, songs: Song[], songSelectCallback: (song: Song) => void) {
     super(width, height);
 
-    const header = new Text('Select song:', {
-      fontFamily: 'Arial',
-      fontSize: this.height / 12,
-      fill: 0xffffff,
+    const header = new Text('Select song', {
+      fontFamily: 'Confetti Stream',
+      fontSize: this.height / 8,
+      fill: 0xff3399,
       align: 'center',
     });
     header.anchor.set(0.5, 0);
@@ -18,8 +18,11 @@ export class SelectSongScene extends Scene {
     this.container.addChild(header);
 
     songs.forEach((song, index) => {
-      const button = createSongSelectButton(song, width, height, songSelectCallback);
-      button.position.set(width / 2 - button.width / 2, height / 2.3 - button.height / 2 + height / 4 * index);
+      let fontColor = 0x000000;
+      if (song.name == 'Autumn Dance') fontColor = 0xff7700;
+      else if (song.name == 'Funky Love') fontColor = 0xff0000;
+      const button = createSongSelectButton(song, width, height, fontColor, songSelectCallback);
+      button.position.set(width / 2 - button.width / 2, height / 2.2 - button.height / 2 + height / 4.4 * index);
       this.container.addChild(button);
     });
   }
