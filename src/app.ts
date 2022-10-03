@@ -34,6 +34,7 @@ Assets.load([
   'images/stick-right.png',
   'images/checkbox-off.png',
   'images/checkbox-on.png',
+  'images/button.png',
 ]).then(loadFirstScreen);
 
 const songs: Song[] = [autumnDance, funkyLove];

@@ -41,7 +41,7 @@ export class PauseScene extends Scene {
     this.container.addChild(this.sprite);
 
     const replayButton = new Button(
-      this.height / 1.5,
+      this.height,
       this.height / 5,
       this.height / 15,
       0,

@@ -1,10 +1,10 @@
 import { EventEmitter } from "@pixi/utils";
-import { Container, Sprite, Texture, Text } from "pixi.js";
+import { Container, Sprite, Text } from "pixi.js";
 
 export class Button extends Container {
   constructor(width: number, height: number, fontSize: number, fontColor: number, text: string, callback: EventEmitter.ListenerFn) {
     super();
-    const rectangle = Sprite.from(Texture.WHITE);
+    const rectangle = Sprite.from('images/button.png');
     rectangle.width = width;
     rectangle.height = height;
     rectangle.interactive = true;

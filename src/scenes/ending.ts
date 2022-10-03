@@ -89,7 +89,7 @@ export class EndingScene extends Scene {
     this.container.addChild(totalScore);
 
     const replayButton = new Button(
-      this.height / 1.5,
+      this.height,
       this.height / 5,
       this.height / 15,
       0,
