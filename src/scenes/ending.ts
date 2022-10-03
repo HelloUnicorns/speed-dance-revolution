@@ -4,7 +4,7 @@ import { Button } from "../sprites/button";
 import { Statistics } from "../utils/statistics";
 
 export class EndingScene extends Scene {
-  constructor(width: number, height: number, songName: string, statstics: Statistics, replayCallback: () => void) {
+  constructor(width: number, height: number, songName: string, statistics: Statistics, replayCallback: () => void) {
     super(width, height);
 
     const header = new Text(songName, {
@@ -19,12 +19,13 @@ export class EndingScene extends Scene {
     this.container.addChild(header);
 
     const details = new Text(`
-      Max Combo: ${statstics.maxCombo}\n
-      Perfect: ${statstics.perfect}\n
-      Great: ${statstics.great}\n
-      Good: ${statstics.good}\n
-      O.K.: ${statstics.ok}\n
-      Total Score: ${Math.round(statstics.score)}`, {
+      Max Combo: ${statistics.maxCombo}\n
+      Perfect: ${statistics.perfect}\n
+      Great: ${statistics.great}\n
+      Good: ${statistics.good}\n
+      O.K.: ${statistics.ok}\n
+      Missed: ${statistics.miss}\n
+      Total Score: ${Math.round(statistics.score)}`, {
         fontFamily: 'Arial',
         fontSize: height / 32,
         fill: 0xffffff,

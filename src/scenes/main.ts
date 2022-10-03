@@ -226,9 +226,9 @@ export class MainScene extends Scene {
   miss(arrow?: ArrowSprite) {
     console.log('miss');
     const missMessage = getMissMessage();
-    const comboLabel = this.container.getChildByName('combo') as Text;
-
-    comboLabel.text = missMessage;
+    this.statistics.noteIncrease(missMessage);
+    (this.container.getChildByName('hit') as HitMessage).setMessage(
+      missMessage, 0xFF0000, HitMessage.DEFAULT_TIMEOUT / this.speed);
 
     this.updateCombo(0);
     if (arrow !== undefined) {
