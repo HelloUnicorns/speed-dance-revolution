@@ -13,6 +13,7 @@ const HIT_SCORE = 10;
 const MAX_SCORE_COMBO_MULTIPLIER = 11;
 const COMBO_LEVEL_LENGTH = 10;
 const VOLUME = 0.08;
+const SPEEDING_UP_MESSAGE = 'Speeding up!';
 
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
   return appWidth / 2 + (direction.order - 1.5) * arrowWidth * 1.1;
@@ -75,6 +76,16 @@ export class MainScene {
     comboLabel.name = 'combo';
     this.container.addChild(comboLabel);
     this.updateCombo(0);
+
+    const speedUpCounter = new Text('10', {
+      fontFamily: 'Arial',
+      fontSize: 32,
+      fill: 0xffffff,
+    });
+    speedUpCounter.anchor.set(0);
+    speedUpCounter.position.set(0);
+    speedUpCounter.name = 'speed-up-counter';
+    this.container.addChild(speedUpCounter);
 
     const targetArrows = new TargetArrowContainer();
     targetArrows.name = 'targetArrows';
@@ -187,8 +198,16 @@ export class MainScene {
     }
 
     this.accelerationTimer += delta / 60;
+    const speedUpCounter: Text = this.container.getChildByName('speed-up-counter');
+    const newSpeedUpCount = 10 - Math.floor(this.accelerationTimer);
+    if (
+      newSpeedUpCount.toString() !== speedUpCounter.text &&
+      (speedUpCounter.text !== SPEEDING_UP_MESSAGE || newSpeedUpCount <= 8)
+    ) {
+      speedUpCounter.text = newSpeedUpCount.toString();
+    }
     while (this.accelerationTimer > ACCELERATION_TIME_DELTA) {
-      console.log('speeding up!');
+      speedUpCounter.text = SPEEDING_UP_MESSAGE;
       this.speed *= ACCELERATION;
       this.music.speed = this.speed;
       this.accelerationTimer -= ACCELERATION_TIME_DELTA;
