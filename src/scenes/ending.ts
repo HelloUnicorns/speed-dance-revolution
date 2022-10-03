@@ -28,7 +28,8 @@ export class EndingScene extends Scene {
     details.name = 'details';
     this.container.addChild(details);
 
-    const replayButton = new Button(height / 1.875, height / 7.5, 'Start a new game', replayCallback);
+    const replayButton = new Button(
+        this.height / 1.5, this.height / 5, this.height / 15, 'Start a new game', replayCallback);
     replayButton.position.set(width / 2 - replayButton.width / 2, height  - replayButton.height - 20);
     this.container.addChild(replayButton);
   }

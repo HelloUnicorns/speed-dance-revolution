@@ -2,7 +2,7 @@ import { EventEmitter } from "@pixi/utils";
 import { Container, Sprite, Texture, Text } from "pixi.js";
 
 export class Button extends Container {
-  constructor(width = 320, height = 80, text: string, callback: EventEmitter.ListenerFn) {
+  constructor(width: number, height: number, fontSize: number, text: string, callback: EventEmitter.ListenerFn) {
     super();
     const rectangle = Sprite.from(Texture.WHITE);
     rectangle.width = width;
@@ -14,7 +14,7 @@ export class Button extends Container {
   
     const label = new Text(text, {
       fontFamily: 'Arial',
-      fontSize: 32,
+      fontSize: fontSize,
       fill: 0x000000,
       align: 'center',
     });
