@@ -1,6 +1,6 @@
-import { ACCELERATION, ACCELERATION_TIME_DELTA, APP_HEIGHT, ARROW_HEIGHT, TARGET_POSITION } from '../consts';
+import { ACCELERATION, ACCELERATION_TIME_DELTA, ARROW_SPAWN, TARGET_POSITION } from '../consts';
 
-export const SPAWN_TO_TARGET = APP_HEIGHT + ARROW_HEIGHT - TARGET_POSITION;
+export const SPAWN_TO_TARGET = ARROW_SPAWN - TARGET_POSITION;
 
 interface Note {
   time: number;
@@ -12,6 +12,9 @@ export interface Song {
   source: string;
   baseArrowSpeed: number;
   bpm: number;
+  fadeOutStart: number;
+  fadeOutEnd: number;
+  end: number;
   notes: Note[];
 }
 
@@ -50,5 +53,22 @@ export function beatsToSpawnTime(song: Song): Song {
     }
   }
   song.notes = song.notes.sort((a, b) => a.time - b.time);
+
+  // Change fade out start and end time in song to time in game
+  while (changeSpeedTime + ACCELERATION_TIME_DELTA * speed < song.fadeOutStart) {
+    changeSpeedTime += ACCELERATION_TIME_DELTA * speed;
+    speedIndex++;
+    speed *= ACCELERATION;
+  }
+  song.fadeOutStart -=
+    changeSpeedTime - speedIndex * ACCELERATION_TIME_DELTA + (song.fadeOutStart - changeSpeedTime) * (1 - 1 / speed);
+  while (changeSpeedTime + ACCELERATION_TIME_DELTA * speed < song.fadeOutEnd) {
+    changeSpeedTime += ACCELERATION_TIME_DELTA * speed;
+    speedIndex++;
+    speed *= ACCELERATION;
+  }
+  song.fadeOutEnd -=
+    changeSpeedTime - speedIndex * ACCELERATION_TIME_DELTA + (song.fadeOutEnd - changeSpeedTime) * (1 - 1 / speed);
+
   return song;
 }
