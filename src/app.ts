@@ -51,6 +51,12 @@ function onSongSelect(song: Song) {
     }
   };
 
+  document.addEventListener('visibilitychange', () => {
+    if (document.hidden) {
+      mainScene.pause();
+    }
+  });
+
   app.start();
 }
 
@@ -74,5 +80,6 @@ app.ticker.add((delta: number) => {
     mainScene.update(delta);
   }
 });
+
 
 export default app;
