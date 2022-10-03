@@ -127,6 +127,88 @@ export class MainScene extends Scene {
         this.hit(hitArrow.direction);
         arrows.removeChild(hitArrow);
       };
+
+      // Touch handler left side
+      const touchArrowLeft = ArrowSprite.realFrom('images/arrow.png', direction);
+      touchArrowLeft.scale.set(ARROW_HEIGHT / touchArrowLeft.height);
+      touchArrowLeft.anchor.set(0.5);
+      touchArrowLeft.rotation = direction.rotation;
+      touchArrowLeft.tint = direction.name == 'left' || direction.name == 'right' ? 0xff00ff : 0x3377ff;
+      touchArrowLeft.position.set(this.width * 0.85, this.height / 2);
+      switch (direction.name) {
+        case 'left':
+          touchArrowLeft.position.x -= arrow.width;
+          break;
+        case 'right':
+          touchArrowLeft.position.x += arrow.width;
+          break;
+        case 'up':
+          touchArrowLeft.position.y -= arrow.height;
+          break;
+        case 'down':
+          touchArrowLeft.position.y += arrow.height;
+          break;
+      }
+      touchArrowLeft.interactive = true;
+      touchArrowLeft.buttonMode = true;
+      touchArrowLeft.on('pointerdown', () => {
+        if (!this.running) return;
+        const arrows: Container = this.container.getChildByName('arrows');
+        const hitArrow = (arrows.children as ArrowSprite[]).find(
+          (arrow) =>
+            arrow.direction === direction &&
+            arrow.position.y < TARGET_POSITION + HIT_DISTANCE &&
+            arrow.position.y > TARGET_POSITION - HIT_DISTANCE,
+        );
+        if (hitArrow === undefined) {
+          this.miss();
+          return;
+        }
+        this.hit(hitArrow.direction);
+        arrows.removeChild(hitArrow);
+      })
+      this.container.addChild(touchArrowLeft);
+
+      // Touch handler right side
+      const touchArrowRight = ArrowSprite.realFrom('images/arrow.png', direction);
+      touchArrowRight.scale.set(ARROW_HEIGHT / touchArrowRight.height);
+      touchArrowRight.anchor.set(0.5);
+      touchArrowRight.rotation = direction.rotation;
+      touchArrowRight.tint = direction.name == 'left' || direction.name == 'right' ? 0xff00ff : 0x3377ff;
+      touchArrowRight.position.set(this.width * 0.15, this.height / 2);
+      switch (direction.name) {
+        case 'left':
+          touchArrowRight.position.x -= arrow.width;
+          break;
+        case 'right':
+          touchArrowRight.position.x += arrow.width;
+          break;
+        case 'up':
+          touchArrowRight.position.y -= arrow.height;
+          break;
+        case 'down':
+          touchArrowRight.position.y += arrow.height;
+          break;
+      }
+      touchArrowRight.interactive = true;
+      touchArrowRight.buttonMode = true;
+      touchArrowRight.on('pointerdown', () => {
+        if (!this.running) return;
+        const arrows: Container = this.container.getChildByName('arrows');
+        const hitArrow = (arrows.children as ArrowSprite[]).find(
+          (arrow) =>
+            arrow.direction === direction &&
+            arrow.position.y < TARGET_POSITION + HIT_DISTANCE &&
+            arrow.position.y > TARGET_POSITION - HIT_DISTANCE,
+        );
+        if (hitArrow === undefined) {
+          this.miss();
+          return;
+        }
+        this.hit(hitArrow.direction);
+        arrows.removeChild(hitArrow);
+      })
+      this.container.addChild(touchArrowRight);
     }
 
     const arrows = new Container();
