@@ -197,7 +197,7 @@ export class MainScene {
     arrow.anchor.set(0.5);
     arrow.rotation = direction.rotation;
     arrow.tint = direction.color;
-    arrow.position.set(getArrowPosition(direction, arrow.width, this.width), 600 + arrow.height);
+    arrow.position.set(getArrowPosition(direction, arrow.width, this.width), this.height + arrow.height);
     arrows.addChild(arrow);
   }
 }

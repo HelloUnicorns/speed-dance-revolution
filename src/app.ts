@@ -3,7 +3,7 @@ import { Assets } from '@pixi/assets';
 import { MainScene } from './scenes/main';
 import { APP_HEIGHT } from './consts';
 
-const app = new Application({ width: 800, height: APP_HEIGHT, autoStart: false });
+const app = new Application({ width: 1280, height: APP_HEIGHT, autoStart: false });
 Assets.load(['images/arrow.png', 'images/arrow_hit.png', 'images/start.png']).then(onAssetsLoaded);
 
 let mainScene: MainScene;
