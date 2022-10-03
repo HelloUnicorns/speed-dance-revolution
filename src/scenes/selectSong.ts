@@ -1,12 +1,13 @@
 import { Container, Text } from 'pixi.js';
 import { Song } from '../songs/song';
 import { createSongSelectButton } from '../sprites/songSelectButton';
+import { Scene } from './scene';
 
-export class SelectSongScene {
+export class SelectSongScene extends Scene {
   container: Container;
 
   constructor(width: number, height: number, songs: Song[], songSelectCallback: (song: Song) => void) {
-    this.container = new Container();
+    super(width, height);
 
     const header = new Text('Select song:', {
       fontFamily: 'Arial',
