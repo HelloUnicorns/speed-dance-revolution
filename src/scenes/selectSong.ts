@@ -1,4 +1,4 @@
-import { Container, Text } from 'pixi.js';
+import { Text } from 'pixi.js';
 import { Song } from '../songs/song';
 import { createSongSelectButton } from '../sprites/songSelectButton';
 import { Scene } from './scene';
