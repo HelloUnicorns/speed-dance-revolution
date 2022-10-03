@@ -7,7 +7,7 @@ export class StartScene extends Scene {
 
     const header = new Text('Speed Dance\nRevolution', {
       fontFamily: 'Arial',
-      fontSize: this.height / 4,
+      fontSize: this.width / 8,
       fill: 0xff3399,
       align: 'center',
     });
