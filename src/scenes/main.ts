@@ -5,12 +5,13 @@ import { TargetArrowSprite } from '../sprites/targetArrow';
 import { TargetArrowContainer } from '../sprites/targetArrowContainer';
 import { keyboard } from '../utils/keyboard';
 import { Song } from '../songs/song';
-import { ACCELERATION, ACCELERATION_TIME_DELTA, ARROW_HEIGHT, TARGET_POSITION } from '../consts';
-import { getHitMessage, getMissMessage } from '../utils/messages';
+import { ACCELERATION, ACCELERATION_TIME_DELTA, ARROW_HEIGHT, HIT_DISTANCE, HIT_MESSAGES, TARGET_POSITION } from '../consts';
+import { getMissMessage } from '../utils/messages';
 import { Scene } from './scene';
 import { AppOptions } from '../options';
+import { HitMessage } from '../sprites/hitMessage';
 
-const HIT_DISTANCE = 25;
+
 const HIT_SCORE = 10;
 const MAX_SCORE_COMBO_MULTIPLIER = 11;
 const COMBO_LEVEL_LENGTH = 10;
@@ -125,7 +126,7 @@ export class MainScene extends Scene {
           this.miss();
           return;
         }
-        this.hit(hitArrow.direction);
+        this.hit(hitArrow.direction, Math.abs(hitArrow.position.y - TARGET_POSITION));
         arrows.removeChild(hitArrow);
       };
     }
@@ -133,6 +134,13 @@ export class MainScene extends Scene {
     const arrows = new Container();
     arrows.name = 'arrows';
     this.container.addChild(arrows);
+
+    const hitMessage = new HitMessage();
+    hitMessage.name = 'hit';
+    hitMessage.anchor.set(0.5, 0.5);
+    hitMessage.position.set(width / 2, height / 2);
+    hitMessage.style.fontSize = height / 6;
+    this.container.addChild(hitMessage);
   }
 
   start() {
@@ -182,13 +190,15 @@ export class MainScene extends Scene {
     this.combo = newCombo;
   }
 
-  hit(direction: Direction) {
+  hit(direction: Direction, hitDelta: number) {
     console.log('hit');
 
-    const hitMessage = getHitMessage();
-    const comboLabel = this.container.getChildByName('combo') as Text;
+    const hitMessageData = hitDelta === HIT_DISTANCE 
+      ? HIT_MESSAGES[HIT_MESSAGES.length - 1]
+      : HIT_MESSAGES[Math.floor((hitDelta / HIT_DISTANCE) * HIT_MESSAGES.length)];
+      (this.container.getChildByName('hit') as HitMessage).setMessage(
+        hitMessageData[0], hitMessageData[1], HitMessage.DEFAULT_TIMEOUT / this.speed);
 
-    comboLabel.text = hitMessage;
     this.updateCombo(this.combo + 1);
     /* The score is multiplied by:
      *   1 if combo < 10
@@ -226,6 +236,7 @@ export class MainScene extends Scene {
     this.updateArrows(delta);
     this.updateSpeedUpCounter(delta);
     this.updateVolumeFadeOut(delta);
+    (this.container.getChildByName('hit') as HitMessage).update(delta);
   }
 
   updateArrows(delta: number) {

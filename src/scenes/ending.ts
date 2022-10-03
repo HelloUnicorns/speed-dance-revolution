@@ -17,7 +17,7 @@ export class EndingScene extends Scene {
     header.name = 'songName';
     this.container.addChild(header);
 
-    const details = new Text(`Total Score: ${score}`, {
+    const details = new Text(`Total Score: ${Math.round(score)}`, {
         fontFamily: 'Arial',
         fontSize: height / 18,
         fill: 0xffffff,
