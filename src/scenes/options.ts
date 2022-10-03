@@ -35,9 +35,8 @@ export class OptionsScene extends Scene {
     header.position.set(width / 2, height / 6);
     this.container.addChild(header);
 
-    const volumeSlider = createSlider(width, height, (volume: number) => {
+    const volumeSlider = createSlider(width, height, appOptions.volume / MAX_VOLUME, (volume: number) => {
       appOptions.volume = volume * MAX_VOLUME;
-      console.log(appOptions.volume);
     });
     volumeSlider.position.set(width / 2, height / 2);
     this.container.addChild(volumeSlider);

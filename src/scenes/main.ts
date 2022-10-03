@@ -20,34 +20,32 @@ function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: nu
 }
 
 export class MainScene extends Scene {
-  songTimer: number;
-  accelerationTimer: number;
-  speed: number;
+  songTimer = 0;
+  accelerationTimer = 0;
+  speed = 1;
   song: Song;
-  currentNoteIndex: number;
+  currentNoteIndex = 0;
   music: Sound;
-  paused: boolean;
-  running: boolean;
-  score: number;
-  combo: number;
-  pauseCallback: () => void;
+  paused = false;
+  running = false;
+  score = 0;
+  combo = 0;
   options: AppOptions;
+  pauseCallback: () => void;
+  endCallback: (songName: string, score: number) => void;
 
-  constructor(width: number, height: number, song: Song, options: AppOptions, pauseCallback: () => void) {
+  constructor(
+    width: number,
+    height: number,
+    song: Song,
+    options: AppOptions,
+    pauseCallback: () => void,
+    endCallback: (songName: string, score: number) => void,
+  ) {
     super(width, height);
     this.pauseCallback = pauseCallback;
-    this.container = new Container();
-    this.width = width;
-    this.height = height;
-    this.songTimer = 0;
-    this.accelerationTimer = 0;
-    this.speed = 1;
+    this.endCallback = endCallback;
     this.song = song;
-    this.currentNoteIndex = 0;
-    this.paused = false;
-    this.running = false;
-    this.score = 0;
-    this.combo = 0;
     this.options = options;
 
     const scoreLabel = new Text('Score: 0', {
@@ -134,7 +132,6 @@ export class MainScene extends Scene {
     const arrows = new Container();
     arrows.name = 'arrows';
     this.container.addChild(arrows);
-
   }
 
   start() {
@@ -142,22 +139,22 @@ export class MainScene extends Scene {
       url: this.song.source,
       sprites: { song: { start: 0, end: this.song.end } },
       preload: true,
-      loaded: () => {
+      loaded: async () => {
         this.container.removeChild(this.container.getChildByName('loading'));
         this.music.volume = this.options.volume;
 
         /* Starting the song even if it gets immediately paused,
          *   otherwise this.music.resume() doesn't work in this.resume() */
-        this.music.play('song');
+        (await this.music.play('song')).on('end', () => {
+          console.log('song ended');
+          this.endCallback(this.song.name, this.score);
+        });
+
         if (!this.paused) {
           this.running = true;
         } else {
           this.music.pause();
         }
-      },
-      complete: () => {
-        // TODO: Add ending song scene (with the results) that afterwards leads to the song select scene.
-        console.log('done');
       },
     });
   }
