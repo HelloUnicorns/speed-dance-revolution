@@ -81,13 +81,23 @@ export class MainScene extends Scene {
 
     const speedUpCounter = new Text('10', {
       fontFamily: 'Arial',
-      fontSize: 32,
+      fontSize: this.height / 15,
       fill: 0xffffff,
     });
     speedUpCounter.anchor.set(0);
     speedUpCounter.position.set(0);
     speedUpCounter.name = 'speed-up-counter';
     this.container.addChild(speedUpCounter);
+
+    const loadingLabel = new Text('Loading...', {
+      fontFamily: 'Arial',
+      fontSize: this.height / 15,
+      fill: 0xffffff,
+    });
+    loadingLabel.anchor.set(0.5);
+    loadingLabel.position.set(this.width / 2, this.height / 2);
+    loadingLabel.name = 'loading';
+    this.container.addChild(loadingLabel);
 
     const targetArrows = new TargetArrowContainer();
     targetArrows.name = 'targetArrows';
@@ -131,6 +141,7 @@ export class MainScene extends Scene {
       sprites: { song: { start: 0, end: this.song.end } },
       preload: true,
       loaded: () => {
+        this.container.removeChild(this.container.getChildByName('loading'));
         this.music.volume = DEFAULT_VOLUME;
 
         /* Starting the song even if it gets immediately paused,
