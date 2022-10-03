@@ -9,6 +9,7 @@ import { Song } from './songs/song';
 import { PauseScene } from './scenes/pause';
 import { keyboard } from './utils/keyboard';
 import { OptionsScene } from './scenes/options';
+import { AppOptions } from './options';
 
 const app = new Application({
   width: Math.min(window.innerWidth - 2 * APP_MARGIN, 1280),
@@ -29,13 +30,15 @@ Assets.load([
 
 const songs: Song[] = [autumnDance, funkyLove];
 
+const options: AppOptions = { volume: 0.08 };
+
 let selectSongScene: SelectSongScene;
 let optionsScene: OptionsScene;
 let mainScene: MainScene;
 let pauseScene: PauseScene;
 function onAssetsLoaded() {
   selectSongScene = new SelectSongScene(app.view.width, app.view.height, songs, enterOptions, onSongSelect);
-  optionsScene = new OptionsScene(app.view.width, app.view.height, exitOptions);
+  optionsScene = new OptionsScene(app.view.width, app.view.height, options, exitOptions);
   app.stage.addChild(selectSongScene.container);
   app.start();
 }
@@ -44,7 +47,7 @@ function onSongSelect(song: Song) {
   app.stop();
   app.stage.removeChild(selectSongScene.container);
   pauseScene = new PauseScene(app.view.width, app.view.height, onResume);
-  mainScene = new MainScene(app.view.width, app.view.height, song, onPause);
+  mainScene = new MainScene(app.view.width, app.view.height, song, options, onPause);
   app.stage.addChild(mainScene.container);
 
   keyboard(' ').press = () => {
@@ -94,6 +97,5 @@ app.ticker.add((delta: number) => {
     mainScene.update(delta);
   }
 });
-
 
 export default app;

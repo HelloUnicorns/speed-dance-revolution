@@ -7,12 +7,12 @@ import { keyboard } from '../utils/keyboard';
 import { Song } from '../songs/song';
 import { ACCELERATION, ACCELERATION_TIME_DELTA, ARROW_HEIGHT, TARGET_POSITION } from '../consts';
 import { Scene } from './scene';
+import { AppOptions } from '../options';
 
 const HIT_DISTANCE = 25;
 const HIT_SCORE = 10;
 const MAX_SCORE_COMBO_MULTIPLIER = 11;
 const COMBO_LEVEL_LENGTH = 10;
-const DEFAULT_VOLUME = 0.08;
 const SPEEDING_UP_MESSAGE = 'Speeding up!';
 
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
@@ -31,8 +31,9 @@ export class MainScene extends Scene {
   score: number;
   combo: number;
   pauseCallback: () => void;
+  options: AppOptions;
 
-  constructor(width: number, height: number, song: Song, pauseCallback: () => void) {
+  constructor(width: number, height: number, song: Song, options: AppOptions, pauseCallback: () => void) {
     super(width, height);
     this.pauseCallback = pauseCallback;
     this.container = new Container();
@@ -47,6 +48,7 @@ export class MainScene extends Scene {
     this.running = false;
     this.score = 0;
     this.combo = 0;
+    this.options = options;
 
     const scoreLabel = new Text('Score: 0', {
       fontFamily: 'Arial',
@@ -142,7 +144,7 @@ export class MainScene extends Scene {
       preload: true,
       loaded: () => {
         this.container.removeChild(this.container.getChildByName('loading'));
-        this.music.volume = DEFAULT_VOLUME;
+        this.music.volume = this.options.volume;
 
         /* Starting the song even if it gets immediately paused,
          *   otherwise this.music.resume() doesn't work in this.resume() */
@@ -259,7 +261,7 @@ export class MainScene extends Scene {
 
   updateVolumeFadeOut(delta: number) {
     if (this.songTimer >= this.song.fadeOutStart && this.songTimer < this.song.fadeOutEnd) {
-      this.music.volume -= ((DEFAULT_VOLUME / (this.song.fadeOutEnd - this.song.fadeOutStart)) * delta) / 60;
+      this.music.volume -= ((this.options.volume / (this.song.fadeOutEnd - this.song.fadeOutStart)) * delta) / 60;
     } else if (this.songTimer >= this.song.fadeOutEnd) {
       this.music.volume = 0;
     }
