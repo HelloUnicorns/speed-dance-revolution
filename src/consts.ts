@@ -11,3 +11,8 @@ export const ACCELERATION = 1.1;
 export const ARROW_HEIGHT = APP_HEIGHT / 10;
 export const TARGET_POSITION = APP_HEIGHT / 10;
 export const ARROW_SPAWN = APP_HEIGHT + ARROW_HEIGHT;
+export const HIT_DISTANCE = 20;
+
+// Messages
+export const HIT_MESSAGES: Array<[string, number]> = [['O.K.', 0x0055FF], ['Good', 0xFF00FF], ['Great!', 0x00FF00], ['PERFECT!', 0xFFFF00]];
+export const MISS_MESSAGES: Array<string> = ['Bummer', 'Not good', 'Incorrect', 'Next time', 'Bad', 'Inaccurate'];

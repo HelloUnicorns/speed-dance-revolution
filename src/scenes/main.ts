@@ -5,11 +5,14 @@ import { TargetArrowSprite } from '../sprites/targetArrow';
 import { TargetArrowContainer } from '../sprites/targetArrowContainer';
 import { keyboard } from '../utils/keyboard';
 import { Song } from '../songs/song';
-import { ACCELERATION, ACCELERATION_TIME_DELTA, ARROW_HEIGHT, TARGET_POSITION } from '../consts';
+import { ACCELERATION, ACCELERATION_TIME_DELTA, ARROW_HEIGHT, HIT_DISTANCE, HIT_MESSAGES, TARGET_POSITION } from '../consts';
+import { getMissMessage } from '../utils/messages';
 import { Scene } from './scene';
 import { AppOptions } from '../options';
+import { HitMessage } from '../sprites/hitMessage';
+import { Statistics } from '../utils/statistics';
 
-const HIT_DISTANCE = 25;
+
 const HIT_SCORE = 10;
 const MAX_SCORE_COMBO_MULTIPLIER = 11;
 const COMBO_LEVEL_LENGTH = 10;
@@ -32,7 +35,8 @@ export class MainScene extends Scene {
   combo = 0;
   options: AppOptions;
   pauseCallback: () => void;
-  endCallback: (songName: string, score: number) => void;
+  endCallback: (songName: string, statistics: Statistics) => void;
+  statistics = new Statistics();
 
   constructor(
     width: number,
@@ -40,7 +44,7 @@ export class MainScene extends Scene {
     song: Song,
     options: AppOptions,
     pauseCallback: () => void,
-    endCallback: (songName: string, score: number) => void,
+    endCallback: (songName: string, statistics: Statistics) => void,
   ) {
     super(width, height);
     this.pauseCallback = pauseCallback;
@@ -124,7 +128,7 @@ export class MainScene extends Scene {
           this.miss();
           return;
         }
-        this.hit(hitArrow.direction);
+        this.hit(hitArrow.direction, Math.abs(hitArrow.position.y - TARGET_POSITION));
         arrows.removeChild(hitArrow);
       };
 
@@ -165,7 +169,7 @@ export class MainScene extends Scene {
             this.miss();
             return;
           }
-          this.hit(hitArrow.direction);
+          this.hit(hitArrow.direction, Math.abs(hitArrow.position.y - TARGET_POSITION));
           arrows.removeChild(hitArrow);
         });
         this.container.addChild(touchArrowLeft);
@@ -206,7 +210,7 @@ export class MainScene extends Scene {
             this.miss();
             return;
           }
-          this.hit(hitArrow.direction);
+          this.hit(hitArrow.direction, Math.abs(hitArrow.position.y - TARGET_POSITION));
           arrows.removeChild(hitArrow);
         });
         this.container.addChild(touchArrowRight);
@@ -242,6 +246,13 @@ export class MainScene extends Scene {
     const arrows = new Container();
     arrows.name = 'arrows';
     this.container.addChild(arrows);
+
+    const hitMessage = new HitMessage();
+    hitMessage.name = 'hit';
+    hitMessage.anchor.set(0.5, 0.5);
+    hitMessage.position.set(width / 2, height / 2);
+    hitMessage.style.fontSize = height / 8;
+    this.container.addChild(hitMessage);
   }
 
   start() {
@@ -257,7 +268,7 @@ export class MainScene extends Scene {
          *   otherwise this.music.resume() doesn't work in this.resume() */
         (await this.music.play('song')).on('end', () => {
           console.log('song ended');
-          this.endCallback(this.song.name, this.score);
+          this.endCallback(this.song.name, this.statistics);
         });
 
         if (!this.paused) {
@@ -289,10 +300,18 @@ export class MainScene extends Scene {
     comboLabel.tint = newCombo === 0 ? 0xff0000 : 0xffffff;
     comboLabel.text = newCombo === 0 ? 'MISS' : 'Combo: ' + newCombo.toString();
     this.combo = newCombo;
+    this.statistics.maxCombo = Math.max(this.statistics.maxCombo, this.combo);
   }
 
-  hit(direction: Direction) {
+  hit(direction: Direction, hitDelta: number) {
     console.log('hit');
+
+    const hitMessageData = hitDelta === HIT_DISTANCE 
+      ? HIT_MESSAGES[HIT_MESSAGES.length - 1]
+      : HIT_MESSAGES[Math.floor(HIT_MESSAGES.length * (1 - hitDelta / HIT_DISTANCE))];
+      (this.container.getChildByName('hit') as HitMessage).setMessage(
+        hitMessageData[0], hitMessageData[1], HitMessage.DEFAULT_TIMEOUT / this.speed);
+    this.statistics.noteIncrease(hitMessageData[0]);
 
     this.updateCombo(this.combo + 1);
     /* The score is multiplied by:
@@ -304,6 +323,7 @@ export class MainScene extends Scene {
      */
     const comboMultiplier = Math.min(MAX_SCORE_COMBO_MULTIPLIER, 1 + Math.floor(this.combo / COMBO_LEVEL_LENGTH));
     this.score += HIT_SCORE * this.speed * comboMultiplier;
+    this.statistics.score = this.score;
 
     const scoreLabel: Text = this.container.getChildByName('score');
     scoreLabel.text = 'Score: ' + Math.round(this.score).toString();
@@ -325,6 +345,11 @@ export class MainScene extends Scene {
 
   miss(arrow?: ArrowSprite) {
     console.log('miss');
+    const missMessage = getMissMessage();
+    this.statistics.noteIncrease(missMessage);
+    (this.container.getChildByName('hit') as HitMessage).setMessage(
+      missMessage, 0xFF0000, HitMessage.DEFAULT_TIMEOUT / this.speed);
+
     this.updateCombo(0);
     if (arrow !== undefined) {
       arrow.missed = true;
@@ -340,6 +365,7 @@ export class MainScene extends Scene {
     this.updateArrows(delta);
     this.updateSpeedUpCounter(delta);
     this.updateVolumeFadeOut(delta);
+    (this.container.getChildByName('hit') as HitMessage).update(delta);
   }
 
   updateArrows(delta: number) {

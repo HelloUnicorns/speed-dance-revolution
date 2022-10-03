@@ -1,9 +1,10 @@
 import { Scene } from "./scene";
 import { Text } from 'pixi.js';
 import { Button } from "../sprites/button";
+import { Statistics } from "../utils/statistics";
 
 export class EndingScene extends Scene {
-  constructor(width: number, height: number, songName: string, score: number, replayCallback: () => void) {
+  constructor(width: number, height: number, songName: string, statistics: Statistics, replayCallback: () => void) {
     super(width, height);
 
     const header = new Text(songName, {
@@ -17,12 +18,20 @@ export class EndingScene extends Scene {
     header.name = 'songName';
     this.container.addChild(header);
 
-    const details = new Text(`Total Score: ${score}`, {
+    const details = new Text(`
+      Max Combo: ${statistics.maxCombo}\n
+      Perfect: ${statistics.perfect}\n
+      Great: ${statistics.great}\n
+      Good: ${statistics.good}\n
+      O.K.: ${statistics.ok}\n
+      Missed: ${statistics.miss}\n
+      Total Score: ${Math.round(statistics.score)}`, {
         fontFamily: 'Arial',
-        fontSize: height / 18,
+        fontSize: height / 32,
         fill: 0xffffff,
         align: 'center',
     });
+    details.style.lineHeight = details.style.lineHeight / 2;
     details.anchor.set(0.5, 0.5);
     details.position.set(width / 2, height / 2);
     details.name = 'details';
