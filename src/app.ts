@@ -26,11 +26,13 @@ Assets.load([
   'images/resume2.png',
   'images/resume3.png',
   'images/options.png',
+  'images/checkbox-off.png',
+  'images/checkbox-on.png',
 ]).then(loadFirstScreen);
 
 const songs: Song[] = [autumnDance, funkyLove];
 
-const options: AppOptions = { volume: 0.08 };
+const options: AppOptions = { volume: 0.08, touchPadEnabled: false };
 
 let selectSongScene: SelectSongScene;
 let optionsScene: OptionsScene;
@@ -97,11 +99,10 @@ function onEnd(songName: string, score: number) {
   app.stage.removeChild(pauseScene.container);
   mainScene = undefined;
 
-  endingScene = new EndingScene(app.view.width, app.view.height,
-    songName, score, () => {
-      app.stop();
-      app.stage.removeChild(endingScene.container);
-      loadFirstScreen();
+  endingScene = new EndingScene(app.view.width, app.view.height, songName, score, () => {
+    app.stop();
+    app.stage.removeChild(endingScene.container);
+    loadFirstScreen();
   });
   app.stage.addChild(endingScene.container);
 }
