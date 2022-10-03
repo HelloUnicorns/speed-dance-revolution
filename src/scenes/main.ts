@@ -1,6 +1,6 @@
-import { Container, Sprite, Text } from 'pixi.js';
+import { Container, Sprite, Text, Texture } from 'pixi.js';
 import { Sound } from '@pixi/sound';
-import { ArrowSprite, Direction, DIRECTIONS, getDirection } from '../sprites/arrow';
+import { ArrowSprite, Direction, DIRECTIONS, DirectionString, getDirection } from '../sprites/arrow';
 import { TargetArrowSprite } from '../sprites/targetArrow';
 import { TargetArrowContainer } from '../sprites/targetArrowContainer';
 import { keyboard } from '../utils/keyboard';
@@ -14,6 +14,7 @@ const HIT_SCORE = 10;
 const MAX_SCORE_COMBO_MULTIPLIER = 11;
 const COMBO_LEVEL_LENGTH = 10;
 const SPEEDING_UP_MESSAGE = 'Speeding up!';
+const MARGIN = 5;
 
 function getArrowPosition(direction: Direction, arrowWidth: number, appWidth: number): number {
   return appWidth / 2 + (direction.order - 1.5) * arrowWidth * 1.1;
@@ -129,6 +130,18 @@ export class MainScene extends Scene {
       };
     }
 
+    const stickLeft = Sprite.from('images/stick-miss.png');
+    stickLeft.anchor.set(0, 0.5);
+    stickLeft.position.set(MARGIN, this.height / 2);
+    stickLeft.name = 'stick-left';
+    this.container.addChild(stickLeft);
+
+    const stickRight = Sprite.from('images/stick-miss.png');
+    stickRight.anchor.set(1, 0.5);
+    stickRight.position.set(this.width - MARGIN, this.height / 2);
+    stickRight.name = 'stick-right';
+    this.container.addChild(stickRight);
+
     const arrows = new Container();
     arrows.name = 'arrows';
     this.container.addChild(arrows);
@@ -201,6 +214,10 @@ export class MainScene extends Scene {
     const targetArrows: TargetArrowContainer = this.container.getChildByName('targetArrows');
     const arrow = targetArrows.getChildByDirection(direction) as TargetArrowSprite;
     arrow.hit(TargetArrowSprite.DEFAULT_TIMEOUT / this.speed);
+
+    console.log(`stick-${direction.name}.png`);
+    (this.container.getChildByName('stick-left') as Sprite).texture = Texture.from(`images/stick-${direction.name}.png`);
+    (this.container.getChildByName('stick-right') as Sprite).texture = Texture.from(`images/stick-${direction.name}.png`);
   }
 
   miss(arrow?: ArrowSprite) {
@@ -209,6 +226,8 @@ export class MainScene extends Scene {
     if (arrow !== undefined) {
       arrow.missed = true;
     }
+    (this.container.getChildByName('stick-left') as Sprite).texture = Texture.from(`images/stick-miss.png`);
+    (this.container.getChildByName('stick-right') as Sprite).texture = Texture.from(`images/stick-miss.png`);
   }
 
   update(delta: number) {
