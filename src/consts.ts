@@ -1,6 +1,6 @@
 // App constants
 export const APP_MARGIN = 8;
-export const APP_HEIGHT = Math.min(window.innerHeight - 2 * APP_MARGIN, 720);
+export const APP_HEIGHT = Math.min(window.innerHeight - 2 * APP_MARGIN, 517);
 export const MAX_VOLUME = 0.16;
 
 // Song acceleration constants

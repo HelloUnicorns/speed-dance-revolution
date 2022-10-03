@@ -16,7 +16,7 @@ import FontFaceObserver from 'fontfaceobserver';
 import { StartScene } from './scenes/start';
 
 const app = new Application({
-  width: Math.min(window.innerWidth - 2 * APP_MARGIN, 1280),
+  width: Math.min(window.innerWidth - 2 * APP_MARGIN, 932),
   height: APP_HEIGHT,
   autoStart: true,
 });
