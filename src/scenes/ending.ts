@@ -8,7 +8,7 @@ export class EndingScene extends Scene {
     super(width, height);
 
     const header = new Text(songName, {
-        fontFamily: 'Arial',
+        fontFamily: 'Stick To It',
         fontSize: height / 12,
         fill: 0xffffff,
         align: 'center',
@@ -26,7 +26,7 @@ export class EndingScene extends Scene {
       O.K.: ${statistics.ok}\n
       Missed: ${statistics.miss}\n
       Total Score: ${Math.round(statistics.score)}`, {
-        fontFamily: 'Arial',
+        fontFamily: 'Stick To It',
         fontSize: height / 32,
         fill: 0xffffff,
         align: 'center',

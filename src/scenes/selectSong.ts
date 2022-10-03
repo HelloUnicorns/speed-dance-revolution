@@ -23,7 +23,7 @@ export class SelectSongScene extends Scene {
       let fontColor = 0x000000;
       if (song.name == 'Autumn Dance') fontColor = 0xff7700;
       else if (song.name == 'Funky Love') fontColor = 0xff0000;
-      const button = createSongSelectButton(song, width, height, fontColor, songSelectCallback);
+      const button = createSongSelectButton(song, width, height, songSelectCallback);
       button.position.set(width / 2 - button.width / 2, height / 2.2 - button.height / 2 + height / 4.4 * index);
       this.container.addChild(button);
     });

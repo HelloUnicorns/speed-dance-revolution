@@ -27,7 +27,7 @@ export class OptionsScene extends Scene {
     this.container.addChild(options);
 
     const header = new Text('Options:', {
-      fontFamily: 'Arial',
+      fontFamily: 'Stick To It',
       fontSize: this.height / 12,
       fill: 0xffffff,
       align: 'center',
@@ -42,7 +42,7 @@ export class OptionsScene extends Scene {
     volumeSlider.position.set(width / 2, height / 2 + volumeSlider.height / 4);
     this.container.addChild(volumeSlider);
     const volumeLabel = new Text('Volume:', {
-      fontFamily: 'Arial',
+      fontFamily: 'Stick To It',
       fontSize: this.height / 18,
       fill: 0xffffff,
       align: 'center',
@@ -59,7 +59,7 @@ export class OptionsScene extends Scene {
     touchPadCheckbox.position.set(width * 0.312, height * 3 / 4);
     this.container.addChild(touchPadCheckbox);
     const touchPadLabel = new Text('Enable touch pad (for mobile)', {
-      fontFamily: 'Arial',
+      fontFamily: 'Stick To It',
       fontSize: this.height / 20,
       fill: 0xffffff,
       align: 'center',
